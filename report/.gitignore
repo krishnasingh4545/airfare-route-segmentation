@@ -1,0 +1,8 @@
+*.zip
+airfare_raw.csv
+airfare_cleaned.csv
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+.vscode/
+.idea/
