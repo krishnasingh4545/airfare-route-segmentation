@@ -1,6 +1,7 @@
 # Airfare Route Segmentation by Booking-Window Pricing Behaviour
 
 Segmenting 30 Indian domestic airfare routes into behaviourally distinct groups using K-Means clustering on pricing-behaviour features.
+![Economy Route Segments - Price Trajectory](plots/plot_economy_price_curves.png)
 
 ## Key Findings
 
@@ -116,6 +117,12 @@ MIT License - see LICENSE file for details.
 
 * Dataset: Kaggle - Flight Price Cleaned
 * Built as a self-paced 25-day data science project
+* 
+## Citation
+
+If you use this work or reference it, please cite:
+
+Singh, K. K. (2025). Airfare Route Segmentation by Booking-Window Pricing Behaviour Using Clustering. GitHub repository: github.com/krishnasingh4545/airfare-route-segmentation
 
 
 
