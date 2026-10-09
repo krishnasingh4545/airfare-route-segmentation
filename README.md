@@ -1,4 +1,5 @@
 # Airfare Route Segmentation by Booking-Window Pricing Behaviour
+**🔗 Live Demo:** [your-clean-url.streamlit.app](https://your-clean-url.streamlit.app)
 
 Segmenting 30 Indian domestic airfare routes into behaviourally distinct groups using K-Means clustering on pricing-behaviour features.
 ![Economy Route Segments - Price Trajectory](plots/plot_economy_price_curves.png)
