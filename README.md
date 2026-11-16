@@ -7,9 +7,10 @@
 [![Unsupervised-Learning](https://img.shields.io/badge/ML-Unsupervised%20Clustering-purple.svg)]()
 [![Platform](https://img.shields.io/badge/Platform-AEROMATRIX-0284c7.svg)]()
 
-> **Author**: **Krishna Kumar singh**  
+> **Author**: **Krishna Kumar singh** ([@krishnasingh4545](https://github.com/krishnasingh4545))  
+> **GitHub Repository**: [https://github.com/krishnasingh4545/flight-route-segmentation](https://github.com/krishnasingh4545/flight-route-segmentation)  
 > **Email**: [babukrishnasingh575@gmail.com](mailto:babukrishnasingh575@gmail.com)  
-> **Course / Specialization**: Unsupervised Machine Learning & Revenue Management Analytics  
+> **Specialization**: Unsupervised Machine Learning & Airline Revenue Management  
 > **Live Presentation Deck**: 10-Slide Keynote Deck included with direct `.pptx` export  
 
 ---
@@ -265,7 +266,7 @@ flight_route_segmentation/
 
 ### 1. Clone & Set Up Environment
 ```bash
-git clone https://github.com/<YOUR_GITHUB_USERNAME>/flight-route-segmentation.git
+git clone https://github.com/krishnasingh4545/flight-route-segmentation.git
 cd flight-route-segmentation
 
 # Virtual environment setup
@@ -314,13 +315,12 @@ git add .
 git commit -m "feat: complete airfare route segmentation project with AEROMATRIX UI and 10-slide PPT"
 
 # 4. Link your remote GitHub repository
-# Replace <YOUR_GITHUB_USERNAME> with your actual GitHub username:
-git remote add origin https://github.com/<YOUR_GITHUB_USERNAME>/flight-route-segmentation.git
+git remote add origin https://github.com/krishnasingh4545/flight-route-segmentation.git
 
 # 5. Push to main branch
 git branch -M main
 git push -u origin main
 ```
 
-Provide the resulting GitHub link to your faculty:  
-👉 **`https://github.com/<YOUR_GITHUB_USERNAME>/flight-route-segmentation`**
+Repository Link:  
+👉 **[https://github.com/krishnasingh4545/flight-route-segmentation](https://github.com/krishnasingh4545/flight-route-segmentation)**
