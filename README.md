@@ -8,7 +8,7 @@
 [![Platform](https://img.shields.io/badge/Platform-AEROMATRIX-0284c7.svg)]()
 
 > **Author**: **Krishna Kumar singh** ([@krishnasingh4545](https://github.com/krishnasingh4545))  
-> **GitHub Repository**: [https://github.com/krishnasingh4545/flight-route-segmentation](https://github.com/krishnasingh4545/flight-route-segmentation)  
+> **GitHub Repository**: [https://github.com/krishnasingh4545/airfare-route-segmentation](https://github.com/krishnasingh4545/airfare-route-segmentation)  
 > **Email**: [babukrishnasingh575@gmail.com](mailto:babukrishnasingh575@gmail.com)  
 > **Specialization**: Unsupervised Machine Learning & Airline Revenue Management  
 > **Live Presentation Deck**: 10-Slide Keynote Deck included with direct `.pptx` export  
@@ -266,8 +266,8 @@ flight_route_segmentation/
 
 ### 1. Clone & Set Up Environment
 ```bash
-git clone https://github.com/krishnasingh4545/flight-route-segmentation.git
-cd flight-route-segmentation
+git clone https://github.com/krishnasingh4545/airfare-route-segmentation.git
+cd airfare-route-segmentation
 
 # Virtual environment setup
 python -m venv venv
@@ -315,7 +315,7 @@ git add .
 git commit -m "feat: complete airfare route segmentation project with AEROMATRIX UI and 10-slide PPT"
 
 # 4. Link your remote GitHub repository
-git remote add origin https://github.com/krishnasingh4545/flight-route-segmentation.git
+git remote add origin https://github.com/krishnasingh4545/airfare-route-segmentation.git
 
 # 5. Push to main branch
 git branch -M main
@@ -323,4 +323,4 @@ git push -u origin main
 ```
 
 Repository Link:  
-👉 **[https://github.com/krishnasingh4545/flight-route-segmentation](https://github.com/krishnasingh4545/flight-route-segmentation)**
+👉 **[https://github.com/krishnasingh4545/airfare-route-segmentation](https://github.com/krishnasingh4545/airfare-route-segmentation)**
