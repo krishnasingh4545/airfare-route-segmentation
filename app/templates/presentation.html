@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEROMATRIX Presentation Deck | Airfare Route Segmentation Using Clustering</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    body {
+      background-color: #f8fafc;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.04) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(5, 150, 105, 0.04) 0px, transparent 50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .slide-viewer {
+      width: 100%;
+      max-width: 1140px;
+      aspect-ratio: 16 / 9;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 24px;
+      box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.1), 0 0 1px 1px rgba(15, 23, 42, 0.04);
+      padding: 40px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .slide-viewer::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #2563eb, #0284c7, #059669);
+    }
+
+    .slide-header {
+      margin-bottom: 20px;
+    }
+
+    .slide-category {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: #2563eb;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      display: inline-block;
+      margin-bottom: 6px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      padding: 3px 12px;
+      border-radius: 9999px;
+    }
+
+    .slide-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 27px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.6px;
+      line-height: 1.25;
+      margin-bottom: 3px;
+    }
+
+    .slide-header p {
+      font-size: 14px;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Multi-card presentation grid */
+    .slide-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      height: 100%;
+      align-items: stretch;
+    }
+
+    .slide-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      height: 100%;
+      align-items: stretch;
+    }
+
+    .slide-grid-2x2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 14px;
+      height: 100%;
+    }
+
+    .slide-card {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .slide-card:hover {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+    }
+
+    .stat-hero {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1;
+      color: #2563eb;
+      letter-spacing: -1px;
+    }
+
+    .stat-hero-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .card-desc {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+
+    .card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .card-bullet {
+      font-size: 12px;
+      color: #334155;
+      line-height: 1.4;
+    }
+
+    .card-bullet strong {
+      color: #0f172a;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 12px;
+      margin-top: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-control {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-control:hover {
+      background: #0f172a;
+      color: #ffffff;
+      border-color: #0f172a;
+      transform: translateY(-2px);
+    }
+
+    .btn-download-pptx {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      border: none;
+    }
+
+    .btn-download-pptx:hover {
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
+      color: #ffffff;
+    }
+
+    .slide-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: #475569;
+    }
+
+    .slide-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .slide-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .slide-dot.active {
+      background: #2563eb;
+      width: 20px;
+      border-radius: 4px;
+    }
+
+    /* Slide visibility */
+    .slide-pane {
+      display: none;
+      height: 100%;
+    }
+
+    .slide-pane.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Slide Viewer Stage -->
+  <div class="slide-viewer" id="slideViewer">
+
+    <!-- Slide 1: Cover -->
+    <div class="slide-pane active" data-slide="1">
+      <div>
+        <div class="slide-header">
+          <span class="slide-category">SLIDE 01 • EXECUTIVE PRESENTATION</span>
+          <h2>Airfare Route Segmentation by Historical Pricing Behaviour</h2>
+          <p>An Unsupervised Machine Learning Framework for Airline Revenue Management & Dynamic Pricing</p>
+        </div>
+        <div class="slide-body">
+          <div class="slide-grid-3">
+            <div class="slide-card" style="border-color: #bfdbfe;">
+              <div class="stat-hero-label">KAGGLE OBSERVATIONS</div>
+              <div class="stat-hero">70,000+</div>
+              <div class="card-title">Commercial Flight Tickets</div>
+              <div class="card-desc">Comprehensive dataset tracking pricing curves, cabin tiers, stops, and advance booking lead times.</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>Schema:</strong> Clean_Dataset.csv</div>
+                <div class="card-bullet"><strong>Dimensions:</strong> 11 attributes -> 9 corridor features</div>
+              </div>
+            </div>
+
+            <div class="slide-card" style="border-color: #a7f3d0;">
+              <div class="stat-hero-label">NETWORK TOPOLOGY</div>
+              <div class="stat-hero" style="color: #059669;">112</div>
+              <div class="card-title">Commercial Route Corridors</div>
+              <div class="card-desc">Origin-Destination corridors encompassing Indian Tier-1 metros, tourist leisure express routes, and intercontinental flagships.</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>Indian Hubs:</strong> DEL, BOM, BLR, GOI, CCU, HYD</div>
+                <div class="card-bullet"><strong>Global Gateways:</strong> London, Dubai, New York, Singapore</div>
+              </div>
+            </div>
+
+            <div class="slide-card" style="border-color: #c7d2fe;">
+              <div class="stat-hero-label">CLUSTERING ARCHITECTURE</div>
+              <div class="stat-hero" style="color: #4f46e5;">K = 4</div>
+              <div class="card-title">Defensible Market Archetypes</div>
+              <div class="card-desc">Validated optimal partitioning using WCSS Elbow, Silhouette, and Davies-Bouldin metrics.</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>Methodology:</strong> K-Means & Manhattan L1 K-Medians</div>
+                <div class="card-bullet"><strong>Stability:</strong> ARI = 0.9927 (99.3% Deterministic)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>AEROMATRIX • Unsupervised Machine Learning Framework</span>
+        <span>Slide 01 / 10</span>
+      </div>
+    </div>
+
+    <!-- Slide 2: Problem Statement -->
+    <div class="slide-pane" data-slide="2">
+      <div>
+        <div class="slide-header">
+          <span class="slide-category">SLIDE 02 • MOTIVATION & PROBLEM STATEMENT</span>
+          <h2>Problem Statement: Airline Dynamic Pricing Volatility</h2>
+          <p>Decoding Revenue Management Asymmetry and the 'Book Now vs. Wait' Dilemma</p>
+        </div>
+        <div class="slide-body">
+          <div class="slide-grid-2">
+            <div class="slide-card" style="background: #fffbeb; border-color: #fed7aa;">
+              <div class="card-title" style="color: #d97706; font-size: 17px;">The Airline Perspective: Yield Escalation</div>
+              <div class="card-desc">How airline revenue management systems (RMS) extract consumer surplus dynamically:</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>Inventory Bucketing:</strong> Seat inventory is segmented into non-linear fare tranches that rise sharply as seats disappear.</div>
+                <div class="card-bullet"><strong>Urgency Exploitation:</strong> Travelers booking inside the final 7 days exhibit extreme price inelasticity, triggering surge multipliers up to 2.6x.</div>
+                <div class="card-bullet"><strong>Asymmetric Power:</strong> Airlines utilize automated machine learning pricing algorithms, while consumers rely on fragmented heuristics.</div>
+              </div>
+            </div>
+
+            <div class="slide-card" style="background: #ecfdf5; border-color: #a7f3d0;">
+              <div class="card-title" style="color: #059669; font-size: 17px;">The Consumer Solution: Segmented Intelligence</div>
+              <div class="card-desc">Empowering travelers with defensible corridor profiling:</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>Corridor Archetype Segmentation:</strong> Segment commercial routes into distinct volatility profiles rather than treating all flights identically.</div>
+                <div class="card-bullet"><strong>The Goldilocks Window:</strong> Statistically identify the historical low-fare window (18–34 days out) before surge triggers.</div>
+                <div class="card-bullet"><strong>Deterministic Signals:</strong> Deliver transparent recommendations (Book Now, Typical, Wait) with percentile gauges.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>AEROMATRIX • Unsupervised Machine Learning Framework</span>
+        <span>Slide 02 / 10</span>
+      </div>
+    </div>
+
+    <!-- Slide 3: Preprocessing -->
+    <div class="slide-pane" data-slide="3">
+      <div>
+        <div class="slide-header">
+          <span class="slide-category">SLIDE 03 • ETL & DATA PREPARATION</span>
+          <h2>Data Source Preparation & Network Topology</h2>
+          <p>Transforming 70,000+ Raw Flight Observations into Standardized Route Matrices</p>
+        </div>
+        <div class="slide-body">
+          <div class="slide-grid-3">
+            <div class="slide-card">
+              <div class="card-title">01. Missing Value Imputation</div>
+              <div class="card-desc">Ensuring numerical and categorical consistency:</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>Median Imputation:</strong> Applied to numerical attributes (fare, duration) for resilience against positive price skewness.</div>
+                <div class="card-bullet"><strong>Mode Imputation:</strong> Fills categorical variables (airline, departure slots).</div>
+                <div class="card-bullet"><strong>Validation:</strong> Verified zero nulls across the 70,000 flight records.</div>
+              </div>
+            </div>
+
+            <div class="slide-card">
+              <div class="card-title">02. Feature Encoding</div>
+              <div class="card-desc">Mapping domain variables to numerical space:</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>Ordinal Stops:</strong> zero=0, one=1, two_or_more=2 reflecting transfer inconvenience.</div>
+                <div class="card-bullet"><strong>Cabin Class:</strong> Economy=0, Business=1 capturing premium seat inventory tiers.</div>
+                <div class="card-bullet"><strong>Temporal Horizons:</strong> Flags last-minute (days &le; 3) and early-bird (days &ge; 21).</div>
+              </div>
+            </div>
+
+            <div class="slide-card">
+              <div class="card-title">03. StandardScaler Scaling</div>
+              <div class="card-desc">Eliminating disparate variable magnitudes:</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>Z-Score Formula:</strong> \(z = \frac{x - \mu}{\sigma}\) ensures zero mean and unit variance.</div>
+                <div class="card-bullet"><strong>Metric Parity:</strong> Prevents ₹90,000 fares from dominating 2.5-hour durations in distance metrics.</div>
+                <div class="card-bullet"><strong>Clustering Ready:</strong> Generates standardized matrix across 112 corridors.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>AEROMATRIX • Unsupervised Machine Learning Framework</span>
+        <span>Slide 03 / 10</span>
+      </div>
+    </div>
+
+    <!-- Slide 4: Feature Engineering -->
+    <div class="slide-pane" data-slide="4">
+      <div>
+        <div class="slide-header">
+          <span class="slide-category">SLIDE 04 • FEATURE ENGINEERING</span>
+          <h2>Feature Engineering: 9 Behavioral Dimensions</h2>
+          <p>Quantifying Route Yield Dynamics, Volatility, and Convenience across Corridors</p>
+        </div>
+        <div class="slide-body">
+          <div class="slide-grid-3">
+            <div class="slide-card" style="border-color: #bfdbfe;">
+              <div class="card-title" style="color: #2563eb;">Pillar 1: Price Scale & Spread</div>
+              <div class="card-desc">Quantifying baseline economic cost:</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>mean_price:</strong> Baseline average route ticket fare.</div>
+                <div class="card-bullet"><strong>median_price:</strong> Outlier-resistant central price point.</div>
+                <div class="card-bullet"><strong>price_spread:</strong> Absolute spread (\(P_{90} - P_{10}\)) capturing the maximum price envelope.</div>
+              </div>
+            </div>
+
+            <div class="slide-card" style="border-color: #fed7aa;">
+              <div class="card-title" style="color: #d97706;">Pillar 2: Volatility & Surge Velocity</div>
+              <div class="card-desc">Measuring dynamic pricing aggression:</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>price_cv:</strong> Coefficient of Variation (\(\sigma / \mu\)) measuring relative volatility.</div>
+                <div class="card-bullet"><strong>last_minute_surge_ratio:</strong> Price ratio at \(\le 3\) days vs \(\ge 21\) days.</div>
+                <div class="card-bullet"><strong>peak_premium_ratio:</strong> Markup for prime morning/evening departure slots.</div>
+              </div>
+            </div>
+
+            <div class="slide-card" style="border-color: #a7f3d0;">
+              <div class="card-title" style="color: #059669;">Pillar 3: Route Transit & Service</div>
+              <div class="card-desc">Reflecting convenience and traveler mix:</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>avg_duration:</strong> Mean transit hours separating regional hops from long-haul flights.</div>
+                <div class="card-bullet"><strong>direct_flight_ratio:</strong> Proportion of non-stop vs. connecting offerings.</div>
+                <div class="card-bullet"><strong>business_ratio:</strong> Proportion of corporate business seat capacity.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>AEROMATRIX • Unsupervised Machine Learning Framework</span>
+        <span>Slide 04 / 10</span>
+      </div>
+    </div>
+
+    <!-- Slide 5: Distance Benchmark -->
+    <div class="slide-pane" data-slide="5">
+      <div>
+        <div class="slide-header">
+          <span class="slide-category">SLIDE 05 • MATHEMATICAL METHODOLOGY</span>
+          <h2>Distance Metrics: Euclidean (L2) vs. Manhattan (L1)</h2>
+          <p>Robust Centroid Formulations Under Volatile Airfare Outliers</p>
+        </div>
+        <div class="slide-body">
+          <div class="slide-grid-2">
+            <div class="slide-card">
+              <div class="card-title" style="color: #475569; font-size: 16px;">Euclidean Distance (\(L_2\) Norm)</div>
+              <div class="card-desc">Standard K-Means formulation: \(d_2(x, \mu) = \sqrt{\sum (x_i - \mu_i)^2}\)</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>Squared Error Penalty:</strong> Squaring large errors gives disproportionate leverage to rare, extreme fare spikes (e.g. ₹95,000 emergency tickets).</div>
+                <div class="card-bullet"><strong>Centroid Pull:</strong> Outliers artificially shift cluster centroids away from representative corridor patterns.</div>
+                <div class="card-bullet"><strong>Validation Result:</strong> Yields Silhouette score of <strong>0.4369</strong> at K=4.</div>
+              </div>
+            </div>
+
+            <div class="slide-card" style="background: #ecfdf5; border-color: #a7f3d0;">
+              <div class="card-title" style="color: #059669; font-size: 16px;">Manhattan Distance (\(L_1\) Norm) ★ Superior Formulation</div>
+              <div class="card-desc">K-Medians formulation: \(d_1(x, c) = \sum |x_i - c_i|\)</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>Linear Residual Growth:</strong> Evaluates absolute differences, maintaining equal penalty per unit deviation.</div>
+                <div class="card-bullet"><strong>Median Robustness:</strong> Component-wise medians resist price spikes, producing tighter and more interpretable clusters.</div>
+                <div class="card-bullet"><strong>Empirical Superiority:</strong> Achieves Silhouette score of <strong>0.4858</strong> at K=4 (+11.2% higher cluster cohesion).</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>AEROMATRIX • Unsupervised Machine Learning Framework</span>
+        <span>Slide 05 / 10</span>
+      </div>
+    </div>
+
+    <!-- Slide 6: Multi-K Sweeps -->
+    <div class="slide-pane" data-slide="6">
+      <div>
+        <div class="slide-header">
+          <span class="slide-category">SLIDE 06 • MODEL VALIDATION & SWEEPS</span>
+          <h2>Hyperparameter Sweep & Quantitative Validation</h2>
+          <p>Defensible Selection of K=4 via WCSS, Silhouette & Davies-Bouldin Metrics</p>
+        </div>
+        <div class="slide-body">
+          <div class="slide-grid-2">
+            <div class="slide-card">
+              <div class="card-title">Multi-K Evaluation Spectrum</div>
+              <div class="card-desc">Rigorous benchmark across cluster counts K=2 through K=6:</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>K=2 (WCSS: 459.54):</strong> Under-segmented binary partition (Domestic vs. International).</div>
+                <div class="card-bullet"><strong>K=3 (WCSS: 341.56):</strong> High intra-cluster dispersion; merges regional shuttles with trunks.</div>
+                <div class="card-bullet"><strong>K=4 (WCSS: 241.66) ★:</strong> Optimal inflection point: Silhouette = 0.4858, Davies-Bouldin = 0.8915.</div>
+                <div class="card-bullet"><strong>K=5+ (Diminishing Returns):</strong> Over-fragments domestic corridors into redundant groups.</div>
+              </div>
+            </div>
+
+            <div class="slide-card" style="border-color: #a7f3d0;">
+              <div class="stat-hero-label">PARTITION STABILITY</div>
+              <div class="stat-hero" style="color: #059669;">0.9927</div>
+              <div class="card-title">Adjusted Rand Index (ARI)</div>
+              <div class="card-desc">Tested across 10 random seed initializations:</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>Mean ARI = 0.9927 (&plusmn;0.0078):</strong> 99.3% deterministic agreement across varying initializations.</div>
+                <div class="card-bullet"><strong>Mean NMI = 0.9871 (&plusmn;0.0137):</strong> Normalized Mutual Information confirms stability.</div>
+                <div class="card-bullet"><strong>Conclusion:</strong> The 4-cluster structure is statistically defensible and robust.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>AEROMATRIX • Unsupervised Machine Learning Framework</span>
+        <span>Slide 06 / 10</span>
+      </div>
+    </div>
+
+    <!-- Slide 7: PCA Dimensionality Reduction -->
+    <div class="slide-pane" data-slide="7">
+      <div>
+        <div class="slide-header">
+          <span class="slide-category">SLIDE 07 • PCA DIMENSIONALITY REDUCTION</span>
+          <h2>PCA Dimensionality Reduction & Loading Compass</h2>
+          <p>Capturing 88.6% Total Cumulative Variance Across 3 Orthogonal Components</p>
+        </div>
+        <div class="slide-body">
+          <div class="slide-grid-3">
+            <div class="slide-card" style="border-color: #bfdbfe;">
+              <div class="stat-hero-label">COMPONENT 1</div>
+              <div class="stat-hero">68.1%</div>
+              <div class="card-title">Fare Magnitude & Distance</div>
+              <div class="card-desc">Heavily loaded on baseline fare scale:</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>mean_price:</strong> +0.41 loading</div>
+                <div class="card-bullet"><strong>price_spread:</strong> +0.40 loading</div>
+                <div class="card-bullet"><strong>avg_duration:</strong> +0.39 loading (separates domestic from intercontinental flights).</div>
+              </div>
+            </div>
+
+            <div class="slide-card" style="border-color: #a7f3d0;">
+              <div class="stat-hero-label">COMPONENT 2</div>
+              <div class="stat-hero" style="color: #059669;">11.1%</div>
+              <div class="card-title">Direct Density vs. Volatility</div>
+              <div class="card-desc">Reflects point-to-point convenience:</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>direct_flight_ratio:</strong> +0.71 loading</div>
+                <div class="card-bullet"><strong>surge_ratio:</strong> -0.32 inverse loading</div>
+                <div class="card-bullet"><strong>Discriminator:</strong> Isolates high-frequency direct shuttles from connecting routes.</div>
+              </div>
+            </div>
+
+            <div class="slide-card" style="border-color: #c7d2fe;">
+              <div class="stat-hero-label">TOTAL VARIANCE</div>
+              <div class="stat-hero" style="color: #4f46e5;">88.6%</div>
+              <div class="card-title">3D Hyperplane Representation</div>
+              <div class="card-desc">Preserves almost 90% of information:</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>PC3 (9.3%):</strong> Loaded on peak departure premium (+0.87).</div>
+                <div class="card-bullet"><strong>Hyperplane:</strong> Distinct geometric clusters without dimensional collapse.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>AEROMATRIX • Unsupervised Machine Learning Framework</span>
+        <span>Slide 07 / 10</span>
+      </div>
+    </div>
+
+    <!-- Slide 8: Discovered Archetypes -->
+    <div class="slide-pane" data-slide="8">
+      <div>
+        <div class="slide-header">
+          <span class="slide-category">SLIDE 08 • DISCOVERED ROUTE ARCHETYPES</span>
+          <h2>Discovered Commercial Route Archetypes</h2>
+          <p>4 Defensible Market Profiles Extracted from Unsupervised Clustering</p>
+        </div>
+        <div class="slide-body">
+          <div class="slide-grid-2x2">
+            <div class="slide-card" style="background: #fffbeb; border-color: #fed7aa;">
+              <div class="card-title" style="color: #d97706;">Cluster 0: Cross-Country Domestic Trunk</div>
+              <div class="card-desc">Connecting & trunk lines between major metros (DEL-BOM, CCU-DEL, BOM-CCU).</div>
+              <div class="card-bullet"><strong>Key Metrics:</strong> Mean: ₹9,643 | Duration: 4.98 hrs | Surge: 2.19x | Direct: 35.1%</div>
+            </div>
+
+            <div class="slide-card" style="background: #eef2ff; border-color: #c7d2fe;">
+              <div class="card-title" style="color: #4f46e5;">Cluster 1: Ultra-Long-Haul Intercontinental</div>
+              <div class="card-desc">Flagship intercontinental routes (DEL-LON, BOM-LON, DEL-JFK, DEL-NRT).</div>
+              <div class="card-bullet"><strong>Key Metrics:</strong> Mean: ₹90,066 | Duration: 13.09 hrs | Surge: 1.57x | High Premium Cabin Share</div>
+            </div>
+
+            <div class="slide-card" style="background: #ecfdf5; border-color: #a7f3d0;">
+              <div class="card-title" style="color: #059669;">Cluster 2: High-Frequency Regional Shuttles</div>
+              <div class="card-desc">Short-haul regional hops (BLR-MAA, BOM-GOI, HYD-BLR, BOM-PNQ).</div>
+              <div class="card-bullet"><strong>Key Metrics:</strong> Mean: ₹4,574 | Duration: 2.56 hrs | Direct: 65.6% | Low-Cost Carrier Dominance</div>
+            </div>
+
+            <div class="slide-card" style="background: #f0f9ff; border-color: #bae6fd;">
+              <div class="card-title" style="color: #0284c7;">Cluster 3: Regional International Gateways</div>
+              <div class="card-desc">Short-haul international business lines (BOM-DXB, DEL-DXB, BLR-SIN, DEL-BKK).</div>
+              <div class="card-bullet"><strong>Key Metrics:</strong> Mean: ₹49,602 | Duration: 7.55 hrs | Direct: 40.0% | Steady Corporate Yield</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>AEROMATRIX • Unsupervised Machine Learning Framework</span>
+        <span>Slide 08 / 10</span>
+      </div>
+    </div>
+
+    <!-- Slide 9: Limitations & Bias -->
+    <div class="slide-pane" data-slide="9">
+      <div>
+        <div class="slide-header">
+          <span class="slide-category">SLIDE 09 • LIMITATIONS & SAMPLING BIASES</span>
+          <h2>Limitations, Sampling Biases & Academic Rigor</h2>
+          <p>Critical Evaluation of Observational Boundaries and Data Censoring</p>
+        </div>
+        <div class="slide-body">
+          <div class="slide-grid-2x2">
+            <div class="slide-card">
+              <div class="card-title">1. Observation Horizon Truncation</div>
+              <div class="card-desc">Fares are recorded up to 49 days prior, omitting ultra-early bird inventory released 6–12 months ahead.</div>
+              <div class="card-bullet"><strong>Impact:</strong> Focuses analysis specifically on the final 7-week yield management curve.</div>
+            </div>
+
+            <div class="slide-card">
+              <div class="card-title">2. Survivorship & Censoring Bias</div>
+              <div class="card-desc">Aggregator scrapes only capture unsold inventory; fully booked flights disappear from view.</div>
+              <div class="card-bullet"><strong>Impact:</strong> Departure-week fares are biased toward either expensive unsold premium seats or distressed inventory.</div>
+            </div>
+
+            <div class="slide-card">
+              <div class="card-title">3. Metropolitan Hub Concentration</div>
+              <div class="card-desc">Dataset concentrates on primary Indian Tier-1 hubs (DEL, BOM, BLR).</div>
+              <div class="card-bullet"><strong>Impact:</strong> Monopolistic regional routes may exhibit different elasticity patterns.</div>
+            </div>
+
+            <div class="slide-card">
+              <div class="card-title">4. Exogenous Shock Omission</div>
+              <div class="card-desc">Macroeconomic shocks (aviation fuel ATF prices, weather disruptions) are unobserved.</div>
+              <div class="card-bullet"><strong>Defense:</strong> Corridor-level aggregation dampens single-ticket noise and isolates structural trends.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>AEROMATRIX • Unsupervised Machine Learning Framework</span>
+        <span>Slide 09 / 10</span>
+      </div>
+    </div>
+
+    <!-- Slide 10: Ethics & Web Deployment -->
+    <div class="slide-pane" data-slide="10">
+      <div>
+        <div class="slide-header">
+          <span class="slide-category">SLIDE 10 • ETHICS & WEB DEPLOYMENT</span>
+          <h2>Ethical Framework & AEROMATRIX Web Platform</h2>
+          <p>Deploying Responsible AI for Dynamic Pricing Consumer Protection</p>
+        </div>
+        <div class="slide-body">
+          <div class="slide-grid-2">
+            <div class="slide-card" style="background: #ecfdf5; border-color: #a7f3d0;">
+              <div class="card-title" style="color: #059669;">Ethical AI & Consumer Protection</div>
+              <div class="card-desc">Counteracting automated dynamic pricing exploitation:</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>Asymmetry Leveling:</strong> Transparent percentile benchmarks (\(P_{10}\), Median, \(P_{90}\)) empower travelers with data parity.</div>
+                <div class="card-bullet"><strong>Emergency Route Defense:</strong> Identifies predatory surge gouging on captive corridors (medical emergencies, bereavement).</div>
+                <div class="card-bullet"><strong>Anti-Cartelization:</strong> Independent analytics prevent carrier pricing bots from coordinating prices around cluster benchmarks.</div>
+              </div>
+            </div>
+
+            <div class="slide-card" style="background: #eff6ff; border-color: #bfdbfe;">
+              <div class="card-title" style="color: #2563eb;">AEROMATRIX Web Platform Architecture</div>
+              <div class="card-desc">Production-grade editorial light travel intelligence console:</div>
+              <div class="card-list">
+                <div class="card-bullet"><strong>ATC Trajectory Deck:</strong> Interactive origin/destination selector with instant vector inversion (⇄).</div>
+                <div class="card-bullet"><strong>Real-Time Verdict Signal:</strong> Deterministic 'Book Now vs. Wait' advice powered by historical percentile ranking.</div>
+                <div class="card-bullet"><strong>Yield Waveform & PCA:</strong> Interactive chart highlighting the 18–34 day Goldilocks window & 112 corridor PCA map.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>AEROMATRIX • Unsupervised Machine Learning Framework</span>
+        <span>Slide 10 / 10</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Slide Control Bar -->
+  <div class="controls-bar">
+    <button type="button" class="btn-control" id="prevSlide">← Previous</button>
+    <div class="slide-dots" id="slideDots">
+      <span class="slide-dot active" data-to="1"></span>
+      <span class="slide-dot" data-to="2"></span>
+      <span class="slide-dot" data-to="3"></span>
+      <span class="slide-dot" data-to="4"></span>
+      <span class="slide-dot" data-to="5"></span>
+      <span class="slide-dot" data-to="6"></span>
+      <span class="slide-dot" data-to="7"></span>
+      <span class="slide-dot" data-to="8"></span>
+      <span class="slide-dot" data-to="9"></span>
+      <span class="slide-dot" data-to="10"></span>
+    </div>
+    <span class="slide-counter" id="slideCounter">Slide 1 of 10</span>
+    <button type="button" class="btn-control" id="nextSlide">Next →</button>
+    <a href="/download/pptx" class="btn-control btn-download-pptx">📥 Download .PPTX Presentation</a>
+    <a href="/" class="btn-control">✈ Back to Live Platform</a>
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 10;
+
+    function showSlide(num) {
+      if (num < 1) num = 1;
+      if (num > totalSlides) num = totalSlides;
+      currentSlide = num;
+
+      document.querySelectorAll(".slide-pane").forEach(p => p.classList.remove("active"));
+      const target = document.querySelector(`.slide-pane[data-slide="${num}"]`);
+      if (target) target.classList.add("active");
+
+      document.getElementById("slideCounter").textContent = `Slide ${num} of ${totalSlides}`;
+
+      document.querySelectorAll(".slide-dot").forEach((d, idx) => {
+        if (idx + 1 === num) d.classList.add("active");
+        else d.classList.remove("active");
+      });
+    }
+
+    document.getElementById("prevSlide").addEventListener("click", () => showSlide(currentSlide - 1));
+    document.getElementById("nextSlide").addEventListener("click", () => showSlide(currentSlide + 1));
+
+    document.querySelectorAll(".slide-dot").forEach(dot => {
+      dot.addEventListener("click", () => {
+        const to = parseInt(dot.getAttribute("data-to"));
+        showSlide(to);
+      });
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === "Space") {
+        showSlide(currentSlide + 1);
+      } else if (e.key === "ArrowLeft") {
+        showSlide(currentSlide - 1);
+      }
+    });
+  </script>
+</body>
+</html>
