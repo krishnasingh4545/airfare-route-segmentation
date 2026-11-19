@@ -138,6 +138,45 @@ class RoutePredictorEngine:
             "sample_count": 920
         }
 
+    def generate_flight_options(self, origin_city, dest_city, current_fare, travel_class, avg_duration):
+        is_intl = origin_city in ["London", "Dubai", "Singapore", "New York", "Paris", "Bangkok", "Tokyo", "Frankfurt"] or \
+                  dest_city in ["London", "Dubai", "Singapore", "New York", "Paris", "Bangkok", "Tokyo", "Frankfurt"]
+        
+        dur_hours = int(avg_duration)
+        dur_mins = int((avg_duration - dur_hours) * 60)
+        dur_str = f"{dur_hours}h {dur_mins:02d}m"
+        
+        flights = []
+        if is_intl:
+            carriers = [
+                {"airline": "Air India", "flight_no": "AI 161", "dep": "02:15", "arr": "07:45", "stops": "Non-stop", "mult": 0.98, "badge": "Great Deal", "badge_color": "#059669"},
+                {"airline": "British Airways" if "London" in [origin_city, dest_city] else "Emirates", "flight_no": "BA 142" if "London" in [origin_city, dest_city] else "EK 501", "dep": "08:30", "arr": "14:00", "stops": "Non-stop", "mult": 1.05, "badge": "Typical Fare", "badge_color": "#64748b"},
+                {"airline": "Virgin Atlantic" if "London" in [origin_city, dest_city] else "Qatar Airways", "flight_no": "VS 301" if "London" in [origin_city, dest_city] else "QR 571", "dep": "13:20", "arr": "18:50", "stops": "Non-stop", "mult": 1.02, "badge": "Popular Choice", "badge_color": "#2563eb"},
+                {"airline": "Emirates" if "London" in [origin_city, dest_city] else "Singapore Airlines", "flight_no": "EK 511" if "London" in [origin_city, dest_city] else "SQ 403", "dep": "21:40", "arr": "08:15 (+1)", "stops": "1 Stop (DXB)", "mult": 0.92, "badge": "Lowest Fare", "badge_color": "#0284c7"}
+            ]
+        else:
+            carriers = [
+                {"airline": "IndiGo", "flight_no": "6E 204", "dep": "06:00", "arr": "08:15", "stops": "Non-stop", "mult": 0.95, "badge": "Lowest Fare", "badge_color": "#0284c7"},
+                {"airline": "Air India", "flight_no": "AI 803", "dep": "09:45", "arr": "12:00", "stops": "Non-stop", "mult": 1.02, "badge": "Great Deal", "badge_color": "#059669"},
+                {"airline": "Vistara", "flight_no": "UK 995", "dep": "14:15", "arr": "16:30", "stops": "Non-stop", "mult": 1.08, "badge": "Premium Cabin", "badge_color": "#7c3aed"},
+                {"airline": "Akasa Air", "flight_no": "QP 1102", "dep": "19:30", "arr": "21:45", "stops": "Non-stop", "mult": 0.93, "badge": "Best Value", "badge_color": "#059669"}
+            ]
+            
+        for c in carriers:
+            flight_price = int(current_fare * c["mult"])
+            flights.append({
+                "airline": c["airline"],
+                "flight_no": c["flight_no"],
+                "dep_time": c["dep"],
+                "arr_time": c["arr"],
+                "duration": dur_str,
+                "stops": c["stops"],
+                "price": flight_price,
+                "badge": c["badge"],
+                "badge_color": c["badge_color"]
+            })
+        return flights
+
     def predict_booking_decision(self, origin: str, destination: str, depart_date_str: str = None, travel_class: str = "Economy"):
         origin_city = self.resolve_city_name(origin)
         dest_city = self.resolve_city_name(destination)
@@ -228,6 +267,15 @@ class RoutePredictorEngine:
         origin_meta = CITY_META.get(origin_city, {"code": origin_city[:3].upper(), "airport": f"{origin_city} Airport", "category": "City"})
         dest_meta = CITY_META.get(dest_city, {"code": dest_city[:3].upper(), "airport": f"{dest_city} Airport", "category": "City"})
 
+        # Generate realistic flight options
+        flight_options = self.generate_flight_options(
+            origin_city=origin_city,
+            dest_city=dest_city,
+            current_fare=current_fare,
+            travel_class=travel_class,
+            avg_duration=route_rec.get("avg_duration", 3.5)
+        )
+
         return {
             "origin": origin_city,
             "origin_code": origin_meta["code"],
@@ -270,5 +318,6 @@ class RoutePredictorEngine:
                 "prices": curve_prices,
                 "current_day": days_left,
                 "goldilocks_window": [18, 30]
-            }
+            },
+            "flight_options": flight_options
         }

@@ -170,12 +170,65 @@ function updateCockpitUI(data) {
   // 5. Financial Advantage Callout
   const advantageMsg = document.getElementById("advantageMsg");
   if (advantageMsg) {
-    advantageMsg.textContent = `Financial Protection Active: Booking now avoids up to ₹${data.potential_savings_inr.toLocaleString()} in departure-week surge escalation.`;
+    advantageMsg.textContent = data.verdict_summary || `Financial Protection Active: Booking now avoids up to ₹${data.potential_savings_inr.toLocaleString()} in departure-week surge escalation.`;
+  }
+
+  const verdictHeading = document.getElementById("verdictHeading");
+  if (verdictHeading) {
+    if (data.verdict_badge === "book-now") {
+      verdictHeading.textContent = "Best Time to Book — Great Price Detected";
+    } else if (data.verdict_badge === "wait") {
+      verdictHeading.textContent = "Hold Off — Prices Expected to Drop";
+    } else {
+      verdictHeading.textContent = "Fair Price — Monitor Trends";
+    }
   }
 
   const advantagePill = document.getElementById("advantagePill");
   if (advantagePill) {
     advantagePill.textContent = `Save ${data.savings_pct}% vs Peak`;
+  }
+
+  // 5.5 Flight Options Update
+  const flightContainer = document.getElementById("flightOptionsContainer");
+  if (flightContainer && data.flight_options) {
+    flightContainer.innerHTML = data.flight_options.map(flight => `
+      <div class="flight-card">
+        <div class="flight-airline">
+          <div class="airline-logo-box">✈️</div>
+          <div>
+            <div class="airline-name">${flight.airline}</div>
+            <div class="flight-no">${flight.flight_no}</div>
+          </div>
+        </div>
+        <div class="flight-timing">
+          <div class="time-point">
+            <span class="time">${flight.dep_time}</span>
+            <span class="airport-code">${data.origin_code}</span>
+          </div>
+          <div class="flight-duration-bar">
+            <span class="duration-text">${flight.duration}</span>
+            <div class="duration-line">
+              <span class="line-dot start"></span>
+              <span class="line-bar"></span>
+              <span class="line-dot end"></span>
+            </div>
+            <span class="stops-text">${flight.stops}</span>
+          </div>
+          <div class="time-point">
+            <span class="time">${flight.arr_time}</span>
+            <span class="airport-code">${data.destination_code}</span>
+          </div>
+        </div>
+        <div class="flight-price-box">
+          <span class="deal-badge" style="background: ${flight.badge_color}15; color: ${flight.badge_color}; border: 1px solid ${flight.badge_color}30;">
+            ${flight.badge}
+          </span>
+          <div class="flight-fare">₹${flight.price.toLocaleString()}</div>
+          <button class="btn-select-flight" onclick="alert('Flight ${flight.flight_no} on ${flight.airline} selected at ₹${flight.price.toLocaleString()}. Proceeding to confirmation.')">Select Flight</button>
+        </div>
+      </div>
+    `).join("");
   }
 
   // 6. Booking Yield Curve

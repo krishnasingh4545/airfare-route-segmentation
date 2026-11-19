@@ -1,6 +1,6 @@
 /* ==========================================================================
-   AEROMATRIX: White & Clean Luxury Aviation Intelligence Console
-   Ultra-Modern, Crisp, Editorial Light Aesthetic
+   FarePredictor: White Luxury Flight Intelligence & Price Forecasting
+   Modern, Consumer-Centric, Ultra-Clean Design System
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap');
@@ -29,6 +29,7 @@
   --text-secondary: #475569;
   --text-muted: #64748b;
   --text-light: #94a3b8;
+
   --font-mono: 'JetBrains Mono', monospace;
   --font-display: 'Space Grotesk', sans-serif;
   --font-sans: 'Plus Jakarta Sans', sans-serif;
@@ -39,10 +40,10 @@
   --radius-lg: 24px;
   --radius-full: 9999px;
 
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
   --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
-  --shadow-hover: 0 12px 28px -4px rgba(15, 23, 42, 0.1), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
-  --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.15);
+  --shadow-hover: 0 12px 28px -4px rgba(15, 23, 42, 0.09), 0 4px 10px -2px rgba(15, 23, 42, 0.03);
+  --shadow-focus: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 * {
@@ -54,9 +55,8 @@
 body {
   background-color: var(--bg-main);
   background-image: 
-    radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.04) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(5, 150, 105, 0.04) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(99, 102, 241, 0.03) 0px, transparent 50%);
+    radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.03) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(5, 150, 105, 0.03) 0px, transparent 50%);
   color: var(--text-primary);
   font-family: var(--font-sans);
   line-height: 1.5;
@@ -67,59 +67,46 @@ body {
 /* ==========================================================================
    Top Header (Clean White & Slate)
    ========================================================================== */
-.cockpit-header {
-  background: rgba(255, 255, 255, 0.92);
+.app-header {
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-light);
-  padding: 14px 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  box-shadow: var(--shadow-sm);
+}
+
+.header-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .brand-section {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
-.radar-logo {
-  width: 42px;
-  height: 42px;
+.brand-logo {
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius-sm);
   background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-  border: 1.5px solid #bfdbfe;
+  border: 1px solid #bfdbfe;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
 }
 
-.radar-sweep {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  border-right: 2px solid var(--primary-blue);
-  animation: sweep 3.5s linear infinite;
-}
-
-@keyframes sweep {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.radar-icon {
+.logo-icon {
   font-size: 20px;
   color: var(--primary-blue);
-  z-index: 2;
 }
 
 .brand-info h1 {
@@ -127,13 +114,13 @@ body {
   font-size: 19px;
   font-weight: 800;
   color: var(--text-primary);
-  letter-spacing: -0.4px;
   display: flex;
   align-items: center;
   gap: 8px;
+  letter-spacing: -0.3px;
 }
 
-.tag-system {
+.badge-subtle {
   background: #eff6ff;
   color: var(--primary-blue);
   border: 1px solid #bfdbfe;
@@ -145,568 +132,470 @@ body {
 }
 
 .brand-info p {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
 }
 
-.system-status-ribbon {
+.main-nav {
   display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.telemetry-node {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-secondary);
-  font-weight: 600;
-}
-
-.live-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--emerald-green);
-  box-shadow: 0 0 8px rgba(5, 150, 105, 0.4);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.9); }
-}
-
-.cockpit-nav {
-  display: flex;
+  gap: 6px;
   background: var(--bg-subtle);
   padding: 4px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-light);
-  gap: 4px;
 }
 
 .nav-tab-btn {
   background: transparent;
   border: none;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
   color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 8px 14px;
+  padding: 8px 16px;
   border-radius: var(--radius-xs);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
 }
 
 .nav-tab-btn:hover {
-  color: var(--text-primary);
+  color: var(--primary-blue);
   background: rgba(255, 255, 255, 0.6);
 }
 
 .nav-tab-btn.active {
   background: #ffffff;
   color: var(--primary-blue);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 /* ==========================================================================
-   Main Command Deck (Split Console Layout)
+   Main Content Layout
    ========================================================================== */
-.console-wrapper {
-  max-width: 1420px;
-  margin: 24px auto;
+.main-content {
+  max-width: 1240px;
+  margin: 24px auto 0 auto;
   padding: 0 24px;
-  display: grid;
-  grid-template-columns: 400px 1fr;
-  gap: 24px;
-  align-items: flex-start;
 }
 
-/* Left Controller: Flight Parameters Deck */
-.flight-parameter-deck {
-  background: var(--bg-card);
+/* ==========================================================================
+   Horizontal Search Banner (FarePredictor Style)
+   ========================================================================== */
+.search-banner {
+  background: #ffffff;
   border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
-  padding: 26px;
-  box-shadow: var(--shadow-card);
-  position: sticky;
-  top: 90px;
-}
-
-.deck-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--border-light);
-}
-
-.deck-header h3 {
-  font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: -0.3px;
-  color: var(--text-primary);
-}
-
-.deck-badge {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--emerald-green);
-  background: var(--emerald-bg);
-  border: 1px solid #a7f3d0;
-  padding: 2px 8px;
-  border-radius: var(--radius-full);
-}
-
-/* ATC Flight Strip Node Selection */
-.atc-flight-strip {
-  background: var(--bg-subtle);
-  border: 1.5px solid var(--border-light);
   border-radius: var(--radius-md);
-  padding: 18px;
-  margin-bottom: 20px;
+  padding: 22px 24px 16px 24px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 24px;
 }
 
-.node-group {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.search-form-horizontal {
+  display: grid;
+  grid-template-columns: 2fr auto 2fr 1.5fr 1.5fr auto;
   gap: 12px;
+  align-items: flex-end;
 }
 
-.airport-node {
-  flex: 1;
+.search-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.airport-node label {
-  display: block;
+.input-label {
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 700;
   color: var(--text-muted);
-  text-transform: uppercase;
-  margin-bottom: 6px;
+  letter-spacing: 0.5px;
 }
 
-.select-custom {
+.select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 15px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.select-clean,
+.input-clean {
   width: 100%;
-  background: #ffffff;
-  border: 1.5px solid var(--border-light);
+  height: 46px;
+  padding: 10px 14px 10px 38px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
   color: var(--text-primary);
-  padding: 10px 12px;
-  border-radius: var(--radius-xs);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 700;
-  transition: all 0.2s ease;
-  cursor: pointer;
-  box-shadow: var(--shadow-sm);
-}
-
-.select-custom:focus {
   outline: none;
-  border-color: var(--primary-blue);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  transition: all 0.2s ease;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
-.btn-swap-atc {
+.input-clean {
+  padding-left: 14px;
+}
+
+.select-clean:focus,
+.input-clean:focus {
   background: #ffffff;
-  border: 1.5px solid var(--border-light);
+  border-color: var(--primary-blue);
+  box-shadow: var(--shadow-focus);
+}
+
+.btn-swap-clean {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-full);
+  background: #ffffff;
+  border: 1px solid var(--border-light);
   color: var(--primary-blue);
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   transition: all 0.25s ease;
-  margin-top: 18px;
   box-shadow: var(--shadow-sm);
-  font-size: 16px;
+  margin-bottom: 2px;
 }
 
-.btn-swap-atc:hover {
-  background: var(--primary-navy);
-  color: #ffffff;
-  border-color: var(--primary-navy);
+.btn-swap-clean:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
   transform: rotate(180deg);
 }
 
-.date-controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.input-custom {
-  width: 100%;
-  background: #ffffff;
-  border: 1.5px solid var(--border-light);
-  color: var(--text-primary);
-  padding: 10px 12px;
-  border-radius: var(--radius-xs);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  box-shadow: var(--shadow-sm);
-}
-
-.input-custom:focus {
-  outline: none;
-  border-color: var(--primary-blue);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-}
-
 .btn-execute-analysis {
-  width: 100%;
+  height: 46px;
+  padding: 0 24px;
   background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   border: none;
-  color: #ffffff;
-  padding: 14px 20px;
   border-radius: var(--radius-sm);
-  font-family: var(--font-display);
+  color: #ffffff;
+  font-family: var(--font-sans);
   font-size: 14px;
-  font-weight: 800;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
+  font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+  white-space: nowrap;
 }
 
 .btn-execute-analysis:hover {
-  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
 }
 
-/* Corridor Preset Chips */
-.preset-corridors {
-  margin-top: 24px;
-}
-
-.preset-corridors h4 {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  margin-bottom: 12px;
-}
-
-.preset-chip-grid {
+.popular-routes-bar {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border-light);
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.popular-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.popular-chips {
+  display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .preset-pill {
   background: var(--bg-subtle);
   border: 1px solid var(--border-light);
-  border-radius: var(--radius-xs);
-  padding: 9px 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
   cursor: pointer;
   transition: all 0.2s ease;
-  color: var(--text-secondary);
 }
 
 .preset-pill:hover {
-  background: #ffffff;
-  border-color: var(--primary-blue);
+  background: #eff6ff;
+  border-color: #bfdbfe;
   color: var(--primary-blue);
-  transform: translateX(4px);
-  box-shadow: var(--shadow-sm);
-}
-
-.preset-pill .route-name {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.preset-pill .type-tag {
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 7px;
-  border-radius: 4px;
-  background: #ffffff;
-  border: 1px solid var(--border-light);
 }
 
 /* ==========================================================================
-   Center Stage: Primary Intelligence HUD
+   Recommendation Hero (100% Consumer-Friendly Verdict)
    ========================================================================== */
-.cockpit-stage {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-/* Main Signal HUD Card */
-.signal-hud-card {
+.recommendation-hero {
   background: #ffffff;
   border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
-  padding: 32px;
+  border-radius: var(--radius-md);
+  padding: 28px;
   box-shadow: var(--shadow-card);
-  position: relative;
-  overflow: hidden;
+  margin-bottom: 24px;
 }
 
-.signal-hud-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #2563eb, #0284c7, #059669);
-}
-
-.hud-top-row {
+.hero-top {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 24px;
-  border-bottom: 1px solid var(--border-light);
-  padding-bottom: 22px;
+  margin-bottom: 20px;
 }
 
-.route-callout {
+.verdict-banner {
   display: flex;
   align-items: center;
-  gap: 16px;
-}
-
-.callout-iata {
-  font-family: var(--font-display);
-  font-size: 40px;
-  font-weight: 800;
-  letter-spacing: -1.2px;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  line-height: 1;
-}
-
-.flight-arrow {
-  color: var(--primary-blue);
-  font-size: 28px;
-}
-
-.callout-sub {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-top: 6px;
-  font-weight: 500;
-}
-
-/* Verdict Signal Terminal Display */
-.verdict-terminal {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+  gap: 18px;
 }
 
 .signal-badge-cockpit {
-  padding: 12px 24px;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.signal-badge-cockpit.book-now {
-  background: #ecfdf5;
-  color: #065f46;
-  border: 2px solid #10b981;
-}
-
-.signal-badge-cockpit.wait {
-  background: #fef2f2;
-  color: #991b1b;
-  border: 2px solid #ef4444;
-}
-
-.signal-badge-cockpit.monitor {
-  background: #fffbeb;
-  color: #92400e;
-  border: 2px solid #f59e0b;
-}
-
-/* Cluster Identifier Pill */
-.cluster-identity-pill {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 6px 14px;
+  padding: 8px 18px;
   border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--bg-subtle);
-  border: 1px solid var(--border-light);
 }
 
-/* Telemetry Grid Boxes */
-.telemetry-metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-bottom: 24px;
+.signal-badge-cockpit.book-now {
+  background: var(--emerald-bg);
+  color: var(--emerald-green);
+  border: 1.5px solid #a7f3d0;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.15);
 }
 
-.telemetry-cell {
-  background: var(--bg-subtle);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
-  padding: 18px;
-  transition: all 0.2s ease;
+.signal-badge-cockpit.wait {
+  background: var(--amber-bg);
+  color: var(--amber-orange);
+  border: 1.5px solid #fde68a;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.15);
 }
 
-.telemetry-cell:hover {
-  border-color: #cbd5e1;
-  transform: translateY(-2px);
-  background: #ffffff;
-  box-shadow: var(--shadow-sm);
+.signal-badge-cockpit.monitor {
+  background: #eff6ff;
+  color: var(--primary-blue);
+  border: 1.5px solid #bfdbfe;
 }
 
-.telemetry-cell .cell-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 6px;
-}
-
-.telemetry-cell .cell-val {
+.route-title {
   font-family: var(--font-display);
   font-size: 26px;
   font-weight: 800;
   color: var(--text-primary);
-  letter-spacing: -0.5px;
-}
-
-.telemetry-cell .cell-sub {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-secondary);
-  margin-top: 4px;
-}
-
-/* Percentile Heat Strip */
-.percentile-cockpit-strip {
-  background: var(--bg-subtle);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
-  padding: 20px;
-}
-
-.strip-top {
   display: flex;
-  justify-content: space-between;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-secondary);
-  margin-bottom: 12px;
+  align-items: center;
+  gap: 12px;
 }
 
-.hud-track {
-  height: 12px;
-  background: linear-gradient(90deg, #10b981 0%, #3b82f6 35%, #f59e0b 70%, #ef4444 100%);
-  border-radius: var(--radius-full);
-  position: relative;
-  margin: 16px 0 12px 0;
+.flight-arrow {
+  color: var(--primary-blue);
+  font-weight: 400;
 }
 
-.hud-pin {
-  position: absolute;
-  top: -8px;
-  width: 28px;
-  height: 28px;
-  background: #0f172a;
-  border: 3.5px solid #ffffff;
-  border-radius: 50%;
-  transform: translateX(-50%);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+.route-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
 }
 
-.strip-labels {
-  display: flex;
-  justify-content: space-between;
+.price-callout-box {
+  text-align: right;
+}
+
+.price-header-label {
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 700;
   color: var(--text-muted);
 }
 
-/* Financial Advantage Callout */
-.advantage-callout {
-  margin-top: 20px;
-  background: #ecfdf5;
-  border: 1.5px solid #a7f3d0;
-  border-radius: var(--radius-sm);
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.advantage-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.advantage-icon {
-  font-size: 22px;
-}
-
-.advantage-text {
-  font-size: 14px;
-  color: #065f46;
-}
-
-.advantage-pill {
-  font-family: var(--font-mono);
-  font-size: 11px;
+.price-amount {
+  font-family: var(--font-display);
+  font-size: 34px;
   font-weight: 800;
-  background: #059669;
-  color: #ffffff;
-  padding: 5px 12px;
+  color: var(--primary-navy);
+  line-height: 1.1;
+  margin: 4px 0;
+}
+
+.savings-badge {
+  display: inline-block;
+  background: var(--emerald-bg);
+  color: var(--emerald-green);
+  border: 1px solid #a7f3d0;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
   border-radius: var(--radius-full);
 }
 
+/* Plain English Explanation Box */
+.verdict-explanation-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.explanation-icon {
+  font-size: 22px;
+}
+
+.explanation-text h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.explanation-text p {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Visual Price Gauge */
+.price-gauge-container {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+}
+
+.gauge-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.gauge-track {
+  height: 12px;
+  border-radius: var(--radius-full);
+  position: relative;
+  background: #e2e8f0;
+  margin-bottom: 28px;
+}
+
+.gauge-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, #10b981 0%, #3b82f6 35%, #f59e0b 70%, #ef4444 100%);
+}
+
+.gauge-indicator {
+  position: absolute;
+  top: -4px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: left 0.4s ease;
+}
+
+.pin-marker {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 4px solid var(--primary-navy);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.pin-label {
+  margin-top: 6px;
+  background: var(--primary-navy);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.gauge-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.label-low { color: var(--emerald-green); }
+.label-mid { color: var(--text-muted); }
+.label-high { color: var(--rose-red); }
+
+/* Key Metrics Grid */
+.key-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.metric-card {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+}
+
+.metric-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metric-value {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 4px 0 2px 0;
+}
+
+.metric-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
 /* ==========================================================================
-   Display Views & White Cards
-   ========================================================================= */
+   Tab View Panels
+   ========================================================================== */
 .view-panel {
   display: none;
 }
@@ -715,228 +604,452 @@ body {
   display: block;
 }
 
-.cockpit-card {
-  background: var(--bg-card);
+.content-card {
+  background: #ffffff;
   border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
-  padding: 28px;
+  border-radius: var(--radius-md);
+  padding: 24px;
   box-shadow: var(--shadow-card);
   margin-bottom: 24px;
 }
 
-.cockpit-card-header {
+.card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 
-.cockpit-card-header h3 {
+.card-header h3 {
   font-family: var(--font-display);
   font-size: 18px;
   font-weight: 800;
   color: var(--text-primary);
-  letter-spacing: -0.3px;
 }
 
-.cockpit-card-header p {
+.card-header p {
   font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.route-badge {
+  background: #eff6ff;
+  color: var(--primary-blue);
+  border: 1px solid #bfdbfe;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
+.chart-wrapper {
+  height: 360px;
+  position: relative;
+  margin-bottom: 24px;
+}
+
+/* Guidance Grid */
+.guidance-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.guidance-card {
+  padding: 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+}
+
+.guidance-card.green {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+}
+
+.guidance-card.red {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.guidance-card.blue {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.guidance-tag {
+  font-size: 11px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.guidance-card.green .guidance-tag { color: var(--emerald-green); }
+.guidance-card.red .guidance-tag { color: var(--rose-red); }
+.guidance-card.blue .guidance-tag { color: var(--primary-blue); }
+
+.guidance-card h4 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.guidance-card p {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   Available Flights List (Tab 2)
+   ========================================================================== */
+.flight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.flight-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 18px 24px;
+  display: grid;
+  grid-template-columns: 1.5fr 2fr 1fr;
+  align-items: center;
+  gap: 20px;
+  transition: all 0.2s ease;
+}
+
+.flight-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.flight-airline {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.airline-logo-box {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.airline-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.flight-no {
+  font-family: var(--font-mono);
+  font-size: 12px;
   color: var(--text-muted);
 }
 
-/* Corridor Dossier Grid */
+.flight-timing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.time-point {
+  text-align: center;
+}
+
+.time-point .time {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: block;
+}
+
+.time-point .airport-code {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.flight-duration-bar {
+  flex: 1;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.duration-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.duration-line {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+}
+
+.line-bar {
+  width: 100%;
+  height: 2px;
+  background: #cbd5e1;
+}
+
+.line-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary-blue);
+  position: absolute;
+}
+
+.line-dot.start { left: 0; }
+.line-dot.end { right: 0; }
+
+.stops-text {
+  font-size: 11px;
+  color: var(--emerald-green);
+  font-weight: 700;
+}
+
+.flight-price-box {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.deal-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.flight-fare {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.btn-select-flight {
+  background: var(--primary-blue);
+  color: #ffffff;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-select-flight:hover {
+  background: #1d4ed8;
+}
+
+/* ==========================================================================
+   Academic & AI Methodology (Tab 4)
+   ========================================================================== */
+.academic-telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.academic-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.academic-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.academic-val {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 4px 0 2px 0;
+}
+
+.academic-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.table-clean {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table-clean th {
+  background: var(--bg-subtle);
+  padding: 12px 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-align: left;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.table-clean td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-secondary);
+}
+
+.table-clean tr:hover td {
+  background: #f8fafc;
+}
+
+.dual-chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+/* Dossier Grid */
 .dossier-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 
 .dossier-card {
-  background: var(--bg-card);
+  background: var(--bg-subtle);
   border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-shadow: var(--shadow-card);
-  position: relative;
-  overflow: hidden;
-}
-
-.dossier-card::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
+  border-radius: var(--radius-sm);
+  padding: 22px;
 }
 
 .dossier-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 12px;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 .dossier-header h4 {
   font-family: var(--font-display);
-  font-size: 17px;
-  font-weight: 800;
-}
-
-.dossier-desc {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-bottom: 18px;
-  line-height: 1.5;
-}
-
-.dossier-stats-matrix {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  background: var(--bg-subtle);
-  padding: 14px;
-  border-radius: var(--radius-xs);
-  margin-bottom: 16px;
-}
-
-.dossier-stat-item .d-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-}
-
-.dossier-stat-item .d-val {
-  font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 800;
   color: var(--text-primary);
-}
-
-.dossier-routes {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.dossier-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 6px;
 }
 
 .d-pill {
   font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 600;
-  background: #ffffff;
-  border: 1px solid var(--border-light);
-  color: var(--text-secondary);
-  padding: 3px 8px;
-  border-radius: 4px;
-}
-
-/* Terminal Tables (Clean White) */
-.terminal-table-wrapper {
-  overflow-x: auto;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-light);
-  background: #ffffff;
-}
-
-.terminal-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-
-.terminal-table th {
-  background: var(--bg-subtle);
-  color: var(--text-primary);
   font-weight: 700;
-  padding: 13px 18px;
-  border-bottom: 1px solid var(--border-light);
-  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  border: 1px solid;
 }
 
-.terminal-table td {
-  padding: 11px 18px;
-  border-bottom: 1px solid var(--border-light);
-  color: var(--text-secondary);
-}
-
-.terminal-table tr:hover td {
-  background: var(--bg-subtle);
-  color: var(--text-primary);
-}
-
-/* Audit Checklist */
-.audit-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.audit-card {
-  background: var(--bg-subtle);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
-  padding: 20px;
-}
-
-.audit-card.bias {
-  border-left: 4px solid var(--amber-orange);
-}
-
-.audit-card.ethics {
-  border-left: 4px solid var(--primary-blue);
-}
-
-.audit-card h5 {
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 800;
-  margin-bottom: 8px;
-  color: var(--text-primary);
-}
-
-.audit-card p {
+.dossier-desc {
   font-size: 13px;
   color: var(--text-secondary);
   line-height: 1.5;
+  margin-bottom: 16px;
 }
 
-/* Footer */
-.cockpit-footer {
+.dossier-stats-matrix {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  background: #ffffff;
+  padding: 12px;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-light);
+  margin-bottom: 14px;
+}
+
+.dossier-stat-item {
   text-align: center;
-  padding: 32px;
+}
+
+.d-label {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 9px;
   color: var(--text-muted);
 }
 
-/* Responsive */
-@media (max-width: 1100px) {
-  .console-wrapper {
-    grid-template-columns: 1fr;
-  }
-  .flight-parameter-deck {
-    position: static;
-  }
-  .telemetry-metrics-grid {
+.d-val {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.sample-routes-list {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.sample-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.sample-route-tag {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .search-form-horizontal {
     grid-template-columns: 1fr 1fr;
   }
+  .btn-swap-clean {
+    display: none;
+  }
+  .key-metrics-grid,
+  .academic-telemetry-grid,
+  .guidance-grid,
+  .dual-chart-grid,
   .dossier-grid {
     grid-template-columns: 1fr;
   }
-  .audit-grid {
+  .flight-card {
     grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .flight-price-box {
+    align-items: center;
   }
 }
