@@ -1029,16 +1029,37 @@ body {
 }
 
 /* ==========================================================================
-   Responsive Adaptations
+   Responsive Adaptations (Flawless on Split-Screen & Mobile)
    ========================================================================== */
 @media (max-width: 1024px) {
+  .header-container {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .main-nav {
+    overflow-x: auto;
+    white-space: nowrap;
+    justify-content: flex-start;
+    padding: 6px;
+  }
   .search-form-horizontal {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
+    gap: 14px;
   }
   .btn-swap-clean {
     display: none;
   }
-  .key-metrics-grid,
+  .hero-top {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .price-callout-box {
+    text-align: left;
+  }
+  .key-metrics-grid {
+    grid-template-columns: 1fr 1fr;
+  }
   .academic-telemetry-grid,
   .guidance-grid,
   .dual-chart-grid,
@@ -1048,8 +1069,26 @@ body {
   .flight-card {
     grid-template-columns: 1fr;
     text-align: center;
+    gap: 14px;
+  }
+  .flight-airline {
+    justify-content: center;
+  }
+  .flight-timing {
+    margin: 10px 0;
   }
   .flight-price-box {
     align-items: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .key-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  .verdict-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
 }
