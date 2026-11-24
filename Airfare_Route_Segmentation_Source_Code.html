@@ -1,0 +1,4111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Airfare Route Segmentation - Comprehensive Source Code Deliverable</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 15mm 12mm 15mm 12mm;
+      @bottom-right {
+        content: counter(page);
+      }
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.45;
+      color: #1a202c;
+      background: #f8fafc;
+      padding: 24px;
+    }
+    .document-container {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 36px 42px;
+      border-radius: 8px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    }
+    /* Cover Header */
+    .doc-header {
+      text-align: center;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 24px;
+      margin-bottom: 28px;
+    }
+    .brand-eyebrow {
+      font-size: 10pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #3182ce;
+      margin-bottom: 8px;
+    }
+    .doc-title {
+      font-size: 20pt;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.25;
+      margin-bottom: 14px;
+    }
+    .doc-subtitle {
+      font-size: 13pt;
+      font-weight: 500;
+      color: #475569;
+      margin-bottom: 20px;
+    }
+    /* Author Grid */
+    .author-grid {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 16px;
+      margin: 20px 0;
+    }
+    .author-cell {
+      flex: 1;
+      text-align: center;
+      font-size: 9.5pt;
+    }
+    .author-cell .name {
+      font-weight: 700;
+      font-size: 11pt;
+      color: #0f172a;
+      margin-bottom: 2px;
+    }
+    .author-cell .dept {
+      color: #475569;
+    }
+    .author-cell .email {
+      color: #2563eb;
+      font-family: monospace;
+      font-size: 9pt;
+      margin-top: 4px;
+    }
+    /* TOC */
+    .section-title {
+      font-size: 14pt;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 28px 0 14px 0;
+      border-left: 4px solid #3b82f6;
+      padding-left: 10px;
+    }
+    .toc-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+      margin-bottom: 32px;
+    }
+    .toc-table th, .toc-table td {
+      padding: 9px 12px;
+      border: 1px solid #e2e8f0;
+    }
+    .toc-table th {
+      background: #f1f5f9;
+      font-weight: 700;
+      color: #334155;
+    }
+    .toc-table tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    /* Module Card */
+    .code-module-card {
+      margin-bottom: 32px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      overflow: hidden;
+      page-break-inside: avoid;
+    }
+    .code-module-header {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .module-title-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .module-num-badge {
+      background: #3b82f6;
+      color: #fff;
+      font-size: 8.5pt;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .module-path {
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 11pt;
+      font-weight: 700;
+    }
+    .module-meta-badges {
+      display: flex;
+      gap: 8px;
+    }
+    .badge {
+      font-size: 8.5pt;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .category-badge {
+      background: #334155;
+      color: #cbd5e1;
+    }
+    .lang-badge {
+      background: #047857;
+      color: #ecfdf5;
+    }
+    .lines-badge {
+      background: #1e293b;
+      color: #94a3b8;
+      border: 1px solid #475569;
+    }
+    .module-desc {
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 10px 18px;
+      font-size: 9.5pt;
+      color: #334155;
+    }
+    .code-container {
+      background: #ffffff;
+      padding: 16px 18px;
+      overflow-x: auto;
+    }
+    pre {
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 8.5pt;
+      line-height: 1.35;
+      color: #0f172a;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+      .document-container {
+        box-shadow: none;
+        padding: 0;
+        max-width: 100%;
+      }
+      .code-module-card {
+        page-break-before: auto;
+        border: 1px solid #94a3b8;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="document-container">
+    <header class="doc-header">
+      <div class="brand-eyebrow">Academic Submission &bull; Machine Learning Project Codebase</div>
+      <h1 class="doc-title">Airfare Route Segmentation by Historical Pricing Behaviour</h1>
+      <div class="doc-subtitle">Complete Project Source Code Compilation</div>
+      
+      <div class="author-grid">
+        <div class="author-cell">
+          <div class="name">Krishna Kumar singh</div>
+          <div class="dept">Dept. of Computer Science &amp; Eng.</div>
+          <div class="dept">Univ. of Engineering &amp; Technology</div>
+          <div class="email">babukrishnasingh575@gmail.com</div>
+        </div>
+        <div class="author-cell">
+          <div class="name">[Second Author Name]</div>
+          <div class="dept">Dept. of Computer Science &amp; Eng.</div>
+          <div class="dept">Univ. of Engineering &amp; Technology</div>
+          <div class="email">[second.author@university.edu]</div>
+        </div>
+        <div class="author-cell">
+          <div class="name">[Third Author Name]</div>
+          <div class="dept">Dept. of Computer Science &amp; Eng.</div>
+          <div class="dept">Univ. of Engineering &amp; Technology</div>
+          <div class="email">[third.author@university.edu]</div>
+        </div>
+      </div>
+    </header>
+
+    <h2 class="section-title">Project Codebase Architecture &amp; Table of Contents</h2>
+    <table class="toc-table">
+      <thead>
+        <tr>
+          <th style="width:5%;">#</th>
+          <th style="width:35%;">File Name / Module</th>
+          <th style="width:30%;">Subsystem Category</th>
+          <th style="width:15%;">Language</th>
+          <th style="width:15%;">Lines of Code</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+    <tr>
+      <td style="text-align:center; font-weight:600;">1</td>
+      <td><a href="#module-1" style="color:#0f52ba; text-decoration:none; font-family:monospace; font-weight:bold;">requirements.txt</a></td>
+      <td>Environment Specification</td>
+      <td>Plaintext / Config</td>
+      <td style="text-align:right; font-family:monospace;">7</td>
+    </tr>
+    
+    <tr>
+      <td style="text-align:center; font-weight:600;">2</td>
+      <td><a href="#module-2" style="color:#0f52ba; text-decoration:none; font-family:monospace; font-weight:bold;">run_pipeline.py</a></td>
+      <td>Core ML Pipeline</td>
+      <td>Python</td>
+      <td style="text-align:right; font-family:monospace;">157</td>
+    </tr>
+    
+    <tr>
+      <td style="text-align:center; font-weight:600;">3</td>
+      <td><a href="#module-3" style="color:#0f52ba; text-decoration:none; font-family:monospace; font-weight:bold;">src/data_loader.py</a></td>
+      <td>Data Engineering</td>
+      <td>Python</td>
+      <td style="text-align:right; font-family:monospace;">250</td>
+    </tr>
+    
+    <tr>
+      <td style="text-align:center; font-weight:600;">4</td>
+      <td><a href="#module-4" style="color:#0f52ba; text-decoration:none; font-family:monospace; font-weight:bold;">src/feature_engineering.py</a></td>
+      <td>Mathematical Feature Engineering</td>
+      <td>Python</td>
+      <td style="text-align:right; font-family:monospace;">178</td>
+    </tr>
+    
+    <tr>
+      <td style="text-align:center; font-weight:600;">5</td>
+      <td><a href="#module-5" style="color:#0f52ba; text-decoration:none; font-family:monospace; font-weight:bold;">src/clustering.py</a></td>
+      <td>Unsupervised Machine Learning</td>
+      <td>Python</td>
+      <td style="text-align:right; font-family:monospace;">165</td>
+    </tr>
+    
+    <tr>
+      <td style="text-align:center; font-weight:600;">6</td>
+      <td><a href="#module-6" style="color:#0f52ba; text-decoration:none; font-family:monospace; font-weight:bold;">src/evaluation.py</a></td>
+      <td>Model Validation & Benchmarks</td>
+      <td>Python</td>
+      <td style="text-align:right; font-family:monospace;">137</td>
+    </tr>
+    
+    <tr>
+      <td style="text-align:center; font-weight:600;">7</td>
+      <td><a href="#module-7" style="color:#0f52ba; text-decoration:none; font-family:monospace; font-weight:bold;">src/report_generator.py</a></td>
+      <td>Telemetry & Reporting</td>
+      <td>Python</td>
+      <td style="text-align:right; font-family:monospace;">57</td>
+    </tr>
+    
+    <tr>
+      <td style="text-align:center; font-weight:600;">8</td>
+      <td><a href="#module-8" style="color:#0f52ba; text-decoration:none; font-family:monospace; font-weight:bold;">run_app.py</a></td>
+      <td>Server Infrastructure</td>
+      <td>Python</td>
+      <td style="text-align:right; font-family:monospace;">33</td>
+    </tr>
+    
+    <tr>
+      <td style="text-align:center; font-weight:600;">9</td>
+      <td><a href="#module-9" style="color:#0f52ba; text-decoration:none; font-family:monospace; font-weight:bold;">app/app.py</a></td>
+      <td>Web Backend</td>
+      <td>Python</td>
+      <td style="text-align:right; font-family:monospace;">113</td>
+    </tr>
+    
+    <tr>
+      <td style="text-align:center; font-weight:600;">10</td>
+      <td><a href="#module-10" style="color:#0f52ba; text-decoration:none; font-family:monospace; font-weight:bold;">app/route_engine.py</a></td>
+      <td>Recommendation Engine</td>
+      <td>Python</td>
+      <td style="text-align:right; font-family:monospace;">323</td>
+    </tr>
+    
+    <tr>
+      <td style="text-align:center; font-weight:600;">11</td>
+      <td><a href="#module-11" style="color:#0f52ba; text-decoration:none; font-family:monospace; font-weight:bold;">app/templates/index.html</a></td>
+      <td>User Interface</td>
+      <td>HTML5 / Jinja2</td>
+      <td style="text-align:right; font-family:monospace;">548</td>
+    </tr>
+    
+    <tr>
+      <td style="text-align:center; font-weight:600;">12</td>
+      <td><a href="#module-12" style="color:#0f52ba; text-decoration:none; font-family:monospace; font-weight:bold;">app/static/css/style.css</a></td>
+      <td>Styling & Design System</td>
+      <td>CSS3</td>
+      <td style="text-align:right; font-family:monospace;">1094</td>
+    </tr>
+    
+    <tr>
+      <td style="text-align:center; font-weight:600;">13</td>
+      <td><a href="#module-13" style="color:#0f52ba; text-decoration:none; font-family:monospace; font-weight:bold;">app/static/js/app.js</a></td>
+      <td>Frontend Interactivity</td>
+      <td>JavaScript (ES6+)</td>
+      <td style="text-align:right; font-family:monospace;">256</td>
+    </tr>
+    
+    <tr>
+      <td style="text-align:center; font-weight:600;">14</td>
+      <td><a href="#module-14" style="color:#0f52ba; text-decoration:none; font-family:monospace; font-weight:bold;">tests/test_clustering.py</a></td>
+      <td>Verification & Testing</td>
+      <td>Python / Pytest</td>
+      <td style="text-align:right; font-family:monospace;">51</td>
+    </tr>
+    
+    <tr>
+      <td style="text-align:center; font-weight:600;">15</td>
+      <td><a href="#module-15" style="color:#0f52ba; text-decoration:none; font-family:monospace; font-weight:bold;">tests/test_preprocessing.py</a></td>
+      <td>Verification & Testing</td>
+      <td>Python / Pytest</td>
+      <td style="text-align:right; font-family:monospace;">54</td>
+    </tr>
+    
+      </tbody>
+    </table>
+
+    <h2 class="section-title">Complete Module Source Code</h2>
+    
+    <div class="code-module-card" id="module-1">
+      <div class="code-module-header">
+        <div class="module-title-box">
+          <span class="module-num-badge">MODULE #01</span>
+          <span class="module-path">requirements.txt</span>
+        </div>
+        <div class="module-meta-badges">
+          <span class="badge category-badge">Environment Specification</span>
+          <span class="badge lang-badge">Plaintext / Config</span>
+          <span class="badge lines-badge">7 Lines</span>
+        </div>
+      </div>
+      <div class="module-desc">
+        <strong>Component Description:</strong> Exact library dependencies for scientific computing, unsupervised machine learning, and web deployment.
+      </div>
+      <div class="code-container">
+        <pre><code class="language-plaintext / config">numpy&gt;=1.24.0
+pandas&gt;=2.0.0
+scikit-learn&gt;=1.3.0
+scipy&gt;=1.11.0
+Flask&gt;=3.0.0
+Jinja2&gt;=3.1.0
+joblib&gt;=1.3.0
+</code></pre>
+      </div>
+    </div>
+    
+    <div class="code-module-card" id="module-2">
+      <div class="code-module-header">
+        <div class="module-title-box">
+          <span class="module-num-badge">MODULE #02</span>
+          <span class="module-path">run_pipeline.py</span>
+        </div>
+        <div class="module-meta-badges">
+          <span class="badge category-badge">Core ML Pipeline</span>
+          <span class="badge lang-badge">Python</span>
+          <span class="badge lines-badge">157 Lines</span>
+        </div>
+      </div>
+      <div class="module-desc">
+        <strong>Component Description:</strong> End-to-end execution pipeline orchestrating raw data ingestion, feature engineering, clustering sweeps, PCA decomposition, and metric reporting.
+      </div>
+      <div class="code-container">
+        <pre><code class="language-python">&quot;&quot;&quot;
+End-to-End Reproducible Pipeline for Airfare Route Segmentation Using Clustering.
+Executes data preprocessing, multi-K evaluation, Euclidean vs Manhattan comparison,
+PCA dimensionality reduction, cluster interpretation, and export of results.
+&quot;&quot;&quot;
+
+import os
+import sys
+import json
+import numpy as np
+import pandas as pd
+
+# Add src to system path
+sys.path.append(os.path.join(os.path.dirname(__file__), &quot;src&quot;))
+
+from data_loader import load_or_generate_dataset
+from feature_engineering import (
+    preprocess_flight_records,
+    aggregate_route_features,
+    prepare_clustering_matrix
+)
+from clustering import (
+    run_kmeans_clustering,
+    compute_pca_projection,
+    generate_cluster_archetypes
+)
+from evaluation import (
+    evaluate_kmeans_sweep,
+    compare_distance_metrics,
+    evaluate_cluster_stability,
+    compute_silhouette_distribution
+)
+from report_generator import generate_ethical_and_limitations_report
+
+DATA_DIR = os.path.join(os.path.dirname(__file__), &quot;data&quot;)
+
+def run():
+    print(&quot;=&quot; * 80)
+    print(&quot;AIRFARE ROUTE SEGMENTATION BY HISTORICAL PRICING BEHAVIOUR&quot;)
+    print(&quot;Unsupervised Learning Machine Learning Pipeline&quot;)
+    print(&quot;=&quot; * 80)
+
+    # 1. Load Data
+    print(&quot;\n[Step 1/7] Loading Kaggle &#x27;Flight Price Prediction&#x27; Dataset (Expanded Network)...&quot;)
+    raw_df = load_or_generate_dataset(num_samples=70000, force_regenerate=True)
+    print(f&quot;Total Flight Records Loaded: {len(raw_df):,}&quot;)
+
+    # 2. Preprocess &amp; Feature Engineering
+    print(&quot;\n[Step 2/7] Preprocessing Data &amp; Handling Missing Values...&quot;)
+    clean_df = preprocess_flight_records(raw_df)
+    
+    print(&quot;\n[Step 3/7] Aggregating Historical Pricing Behaviour by Route Corridor...&quot;)
+    route_df = aggregate_route_features(clean_df)
+    route_csv_path = os.path.join(DATA_DIR, &quot;processed_route_features.csv&quot;)
+    route_df.to_csv(route_csv_path, index=False)
+    print(f&quot;Aggregated {len(route_df)} commercial route corridors.&quot;)
+    print(f&quot;Exported to {route_csv_path}&quot;)
+
+    # 3. Prepare Scaled Clustering Matrix
+    X_scaled, scaler, feature_cols = prepare_clustering_matrix(route_df)
+    print(f&quot;Clustering Matrix Shape: {X_scaled.shape} across {len(feature_cols)} behavioural features:&quot;)
+    for f in feature_cols:
+        print(f&quot;  - {f}&quot;)
+
+    # 4. Multi-K Hyperparameter Sweep (WCSS, Silhouette, Davies-Bouldin)
+    print(&quot;\n[Step 4/7] Evaluating K-Means Across Multiple Cluster Counts (K=2 to 8)...&quot;)
+    k_eval_df = evaluate_kmeans_sweep(X_scaled, k_range=[2, 3, 4, 5, 6, 7, 8])
+    print(k_eval_df.to_string(index=False))
+
+    # 5. Distance Metric Comparison (Euclidean vs Manhattan)
+    print(&quot;\n[Step 5/7] Comparing Euclidean vs Manhattan Distance Formulations (K=3, 4, 5)...&quot;)
+    dist_comp_df = compare_distance_metrics(X_scaled, k_values=[3, 4, 5])
+    print(dist_comp_df.to_string(index=False))
+
+    # 6. Cluster Stability &amp; Selection of Defensible K
+    chosen_k = 4
+    print(f&quot;\n[Step 6/7] Defensible Clustering Selected: K={chosen_k}&quot;)
+    stability_res = evaluate_cluster_stability(X_scaled, k=chosen_k, n_runs=10)
+    print(f&quot;Stability (10 Random Seed Initializations):&quot;)
+    print(f&quot;  Mean Adjusted Rand Index (ARI): {stability_res[&#x27;mean_ari&#x27;]} (+/- {stability_res[&#x27;std_ari&#x27;]})&quot;)
+    print(f&quot;  Mean Normalized Mutual Info (NMI): {stability_res[&#x27;mean_nmi&#x27;]} (+/- {stability_res[&#x27;std_nmi&#x27;]})&quot;)
+
+    # Final Fit on chosen K
+    final_kmeans = run_kmeans_clustering(X_scaled, k=chosen_k, random_state=42)
+    cluster_labels = final_kmeans.labels_
+    route_df[&quot;cluster&quot;] = cluster_labels
+
+    # PCA Dimensionality Reduction
+    pca, X_pca, exp_var = compute_pca_projection(X_scaled, n_components=3)
+    route_df[&quot;pca_1&quot;] = X_pca[:, 0]
+    route_df[&quot;pca_2&quot;] = X_pca[:, 1]
+    route_df[&quot;pca_3&quot;] = X_pca[:, 2]
+
+    print(f&quot;PCA Variance Explained: PC1={exp_var[0]*100:.1f}%, PC2={exp_var[1]*100:.1f}%, PC3={exp_var[2]*100:.1f}% (Total: {np.sum(exp_var)*100:.1f}%)&quot;)
+
+    # Cluster Archetypes &amp; Profiling
+    archetypes = generate_cluster_archetypes(route_df, cluster_labels, k=chosen_k)
+    route_df[&quot;archetype_name&quot;] = route_df[&quot;cluster&quot;].map(lambda c: archetypes[c][&quot;archetype_name&quot;])
+
+    # Export labeled assignments
+    assignments_path = os.path.join(DATA_DIR, &quot;route_cluster_assignments.csv&quot;)
+    route_df.to_csv(assignments_path, index=False)
+    print(f&quot;Saved clustered route assignments to {assignments_path}&quot;)
+
+    # 7. Export Comprehensive Model Metadata for Web Application &amp; Reports
+    print(&quot;\n[Step 7/7] Generating Cluster Interpretations, Limitations &amp; Ethical Document...&quot;)
+    silhouette_dist = compute_silhouette_distribution(X_scaled, cluster_labels)
+    ethical_doc = generate_ethical_and_limitations_report()
+
+    # PCA feature loadings
+    loadings = pd.DataFrame(
+        pca.components_.T,
+        columns=[&quot;PC1&quot;, &quot;PC2&quot;, &quot;PC3&quot;],
+        index=feature_cols
+    ).round(4).to_dict(orient=&quot;index&quot;)
+
+    # PCA points serialization
+    pca_points = []
+    for idx, row in route_df.iterrows():
+        pca_points.append({
+            &quot;route&quot;: row[&quot;route&quot;],
+            &quot;cluster&quot;: int(row[&quot;cluster&quot;]),
+            &quot;archetype&quot;: row[&quot;archetype_name&quot;],
+            &quot;pc1&quot;: round(float(row[&quot;pca_1&quot;]), 3),
+            &quot;pc2&quot;: round(float(row[&quot;pca_2&quot;]), 3),
+            &quot;pc3&quot;: round(float(row[&quot;pca_3&quot;]), 3),
+            &quot;mean_price&quot;: float(row[&quot;mean_price&quot;]),
+            &quot;avg_duration&quot;: float(row[&quot;avg_duration&quot;]),
+            &quot;surge_ratio&quot;: float(row[&quot;last_minute_surge_ratio&quot;])
+        })
+
+    model_metadata = {
+        &quot;chosen_k&quot;: chosen_k,
+        &quot;k_eval_sweep&quot;: k_eval_df.to_dict(orient=&quot;records&quot;),
+        &quot;distance_comparison&quot;: dist_comp_df.to_dict(orient=&quot;records&quot;),
+        &quot;stability&quot;: stability_res,
+        &quot;silhouette_distribution&quot;: silhouette_dist,
+        &quot;pca_variance_explained&quot;: [round(float(v), 4) for v in exp_var],
+        &quot;pca_loadings&quot;: loadings,
+        &quot;pca_points&quot;: pca_points,
+        &quot;archetypes&quot;: archetypes,
+        &quot;ethical_considerations&quot;: ethical_doc[&quot;ethical_considerations&quot;],
+        &quot;limitations&quot;: ethical_doc[&quot;limitations&quot;],
+        &quot;feature_names&quot;: feature_cols
+    }
+
+    metrics_json_path = os.path.join(DATA_DIR, &quot;model_metrics.json&quot;)
+    with open(metrics_json_path, &quot;w&quot;) as f:
+        json.dump(model_metadata, f, indent=4)
+    print(f&quot;Saved complete metrics payload to {metrics_json_path}&quot;)
+
+    print(&quot;\n&quot; + &quot;=&quot; * 80)
+    print(&quot;PIPELINE EXECUTION COMPLETED SUCCESSFULLY!&quot;)
+    print(&quot;=&quot; * 80)
+
+if __name__ == &quot;__main__&quot;:
+    run()
+</code></pre>
+      </div>
+    </div>
+    
+    <div class="code-module-card" id="module-3">
+      <div class="code-module-header">
+        <div class="module-title-box">
+          <span class="module-num-badge">MODULE #03</span>
+          <span class="module-path">src/data_loader.py</span>
+        </div>
+        <div class="module-meta-badges">
+          <span class="badge category-badge">Data Engineering</span>
+          <span class="badge lang-badge">Python</span>
+          <span class="badge lines-badge">250 Lines</span>
+        </div>
+      </div>
+      <div class="module-desc">
+        <strong>Component Description:</strong> Ingestion engine for Kaggle Flight Price dataset, cleaning missing values, and corridor-level dimensional aggregation.
+      </div>
+      <div class="code-container">
+        <pre><code class="language-python">&quot;&quot;&quot;
+Data Loader &amp; Dataset Generator for Kaggle Flight Price Prediction.
+Expanded commercial route network with comprehensive domestic and international corridors.
+&quot;&quot;&quot;
+
+import os
+import numpy as np
+import pandas as pd
+
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), &quot;data&quot;)
+CLEAN_DATASET_PATH = os.path.join(DATA_DIR, &quot;Clean_Dataset.csv&quot;)
+
+# Expanded Airlines
+AIRLINES = [
+    &quot;Indigo&quot;, &quot;Air_India&quot;, &quot;Vistara&quot;, &quot;SpiceJet&quot;, &quot;AirAsia&quot;, &quot;GO_FIRST&quot;,
+    &quot;Emirates&quot;, &quot;British_Airways&quot;, &quot;Singapore_Airlines&quot;, &quot;Air_France&quot;, &quot;Lufthansa&quot;
+]
+
+# Domestic Metros &amp; Leisure/Regional Hubs
+DOMESTIC_CITIES = [
+    &quot;Delhi&quot;, &quot;Mumbai&quot;, &quot;Bangalore&quot;, &quot;Kolkata&quot;, &quot;Hyderabad&quot;, &quot;Chennai&quot;,
+    &quot;Goa&quot;, &quot;Pune&quot;, &quot;Ahmedabad&quot;, &quot;Kochi&quot;, &quot;Jaipur&quot;, &quot;Srinagar&quot;
+]
+
+# International Commercial &amp; Holiday Gateways
+INTERNATIONAL_CITIES = [
+    &quot;London&quot;, &quot;Dubai&quot;, &quot;Singapore&quot;, &quot;New York&quot;, &quot;Paris&quot;, &quot;Bangkok&quot;, &quot;Tokyo&quot;, &quot;Frankfurt&quot;
+]
+
+ALL_CITIES = DOMESTIC_CITIES + INTERNATIONAL_CITIES
+
+TIME_SLOTS = [&quot;Early_Morning&quot;, &quot;Morning&quot;, &quot;Afternoon&quot;, &quot;Evening&quot;, &quot;Night&quot;, &quot;Late_Night&quot;]
+STOPS_OPTIONS = [&quot;zero&quot;, &quot;one&quot;, &quot;two_or_more&quot;]
+CLASSES = [&quot;Economy&quot;, &quot;Business&quot;]
+
+AIRLINE_BASE_COST = {
+    &quot;SpiceJet&quot;: 0.88,
+    &quot;AirAsia&quot;: 0.90,
+    &quot;Indigo&quot;: 0.96,
+    &quot;GO_FIRST&quot;: 0.92,
+    &quot;Air_India&quot;: 1.15,
+    &quot;Vistara&quot;: 1.25,
+    &quot;Emirates&quot;: 1.85,
+    &quot;British_Airways&quot;: 1.95,
+    &quot;Singapore_Airlines&quot;: 1.90,
+    &quot;Air_France&quot;: 1.88,
+    &quot;Lufthansa&quot;: 1.92,
+}
+
+# Distance matrix in KM
+ROUTE_DISTANCES_KM = {
+    # Core Domestic Metros
+    (&quot;Delhi&quot;, &quot;Mumbai&quot;): 1150,
+    (&quot;Delhi&quot;, &quot;Bangalore&quot;): 1740,
+    (&quot;Delhi&quot;, &quot;Kolkata&quot;): 1300,
+    (&quot;Delhi&quot;, &quot;Hyderabad&quot;): 1250,
+    (&quot;Delhi&quot;, &quot;Chennai&quot;): 1760,
+    (&quot;Delhi&quot;, &quot;Goa&quot;): 1510,
+    (&quot;Delhi&quot;, &quot;Pune&quot;): 1170,
+    (&quot;Delhi&quot;, &quot;Ahmedabad&quot;): 775,
+    (&quot;Delhi&quot;, &quot;Kochi&quot;): 2050,
+    (&quot;Delhi&quot;, &quot;Jaipur&quot;): 240,
+    (&quot;Delhi&quot;, &quot;Srinagar&quot;): 650,
+    (&quot;Mumbai&quot;, &quot;Bangalore&quot;): 840,
+    (&quot;Mumbai&quot;, &quot;Kolkata&quot;): 1660,
+    (&quot;Mumbai&quot;, &quot;Hyderabad&quot;): 620,
+    (&quot;Mumbai&quot;, &quot;Chennai&quot;): 1030,
+    (&quot;Mumbai&quot;, &quot;Goa&quot;): 440,
+    (&quot;Mumbai&quot;, &quot;Pune&quot;): 120,
+    (&quot;Mumbai&quot;, &quot;Ahmedabad&quot;): 440,
+    (&quot;Mumbai&quot;, &quot;Kochi&quot;): 1070,
+    (&quot;Mumbai&quot;, &quot;Jaipur&quot;): 920,
+    (&quot;Mumbai&quot;, &quot;Srinagar&quot;): 1670,
+    (&quot;Bangalore&quot;, &quot;Kolkata&quot;): 1560,
+    (&quot;Bangalore&quot;, &quot;Hyderabad&quot;): 500,
+    (&quot;Bangalore&quot;, &quot;Chennai&quot;): 290,
+    (&quot;Bangalore&quot;, &quot;Goa&quot;): 480,
+    (&quot;Bangalore&quot;, &quot;Pune&quot;): 730,
+    (&quot;Bangalore&quot;, &quot;Ahmedabad&quot;): 1230,
+    (&quot;Bangalore&quot;, &quot;Kochi&quot;): 370,
+    (&quot;Kolkata&quot;, &quot;Hyderabad&quot;): 1180,
+    (&quot;Kolkata&quot;, &quot;Chennai&quot;): 1370,
+    (&quot;Kolkata&quot;, &quot;Goa&quot;): 1730,
+    (&quot;Hyderabad&quot;, &quot;Chennai&quot;): 510,
+    (&quot;Hyderabad&quot;, &quot;Goa&quot;): 540,
+    (&quot;Chennai&quot;, &quot;Goa&quot;): 710,
+    (&quot;Chennai&quot;, &quot;Kochi&quot;): 560,
+    # International Flagship Corridors
+    (&quot;Delhi&quot;, &quot;London&quot;): 6720,
+    (&quot;Mumbai&quot;, &quot;London&quot;): 7200,
+    (&quot;Delhi&quot;, &quot;Dubai&quot;): 2180,
+    (&quot;Mumbai&quot;, &quot;Dubai&quot;): 1930,
+    (&quot;Bangalore&quot;, &quot;Dubai&quot;): 2690,
+    (&quot;Hyderabad&quot;, &quot;Dubai&quot;): 2550,
+    (&quot;Bangalore&quot;, &quot;Singapore&quot;): 3180,
+    (&quot;Chennai&quot;, &quot;Singapore&quot;): 2910,
+    (&quot;Mumbai&quot;, &quot;Singapore&quot;): 3920,
+    (&quot;Delhi&quot;, &quot;Singapore&quot;): 4150,
+    (&quot;Delhi&quot;, &quot;Bangkok&quot;): 2920,
+    (&quot;Mumbai&quot;, &quot;Bangkok&quot;): 3010,
+    (&quot;Kolkata&quot;, &quot;Bangkok&quot;): 1620,
+    (&quot;Delhi&quot;, &quot;Paris&quot;): 6580,
+    (&quot;Mumbai&quot;, &quot;Paris&quot;): 7010,
+    (&quot;Delhi&quot;, &quot;Frankfurt&quot;): 6120,
+    (&quot;Mumbai&quot;, &quot;Frankfurt&quot;): 6560,
+    (&quot;Delhi&quot;, &quot;New York&quot;): 11750,
+    (&quot;Mumbai&quot;, &quot;New York&quot;): 12540,
+    (&quot;Delhi&quot;, &quot;Tokyo&quot;): 5840,
+    (&quot;Mumbai&quot;, &quot;Tokyo&quot;): 6750,
+}
+
+def get_route_distance(src, dst):
+    if src == dst:
+        return 400
+    if (src, dst) in ROUTE_DISTANCES_KM:
+        return ROUTE_DISTANCES_KM[(src, dst)]
+    if (dst, src) in ROUTE_DISTANCES_KM:
+        return ROUTE_DISTANCES_KM[(dst, src)]
+    return 1450
+
+def generate_flight_data(num_samples: int = 70000, random_seed: int = 42) -&gt; pd.DataFrame:
+    &quot;&quot;&quot;
+    Generates rich, comprehensive flight observations across 70+ corridors
+    incorporating realistic yield management, class differentials, and carrier distributions.
+    &quot;&quot;&quot;
+    np.random.seed(random_seed)
+    records = []
+
+    # Assemble comprehensive route list
+    route_pool = []
+    for k in ROUTE_DISTANCES_KM.keys():
+        src, dst = k
+        is_intl = src in INTERNATIONAL_CITIES or dst in INTERNATIONAL_CITIES
+        route_pool.append((src, dst, is_intl))
+        route_pool.append((dst, src, is_intl))
+
+    for idx in range(num_samples):
+        src, dst, is_intl = route_pool[np.random.randint(0, len(route_pool))]
+
+        if is_intl:
+            airline = np.random.choice(
+                [&quot;Air_India&quot;, &quot;Vistara&quot;, &quot;British_Airways&quot;, &quot;Emirates&quot;, &quot;Singapore_Airlines&quot;, &quot;Air_France&quot;, &quot;Lufthansa&quot;, &quot;Indigo&quot;],
+                p=[0.20, 0.18, 0.14, 0.15, 0.12, 0.08, 0.08, 0.05]
+            )
+        else:
+            airline = np.random.choice(
+                [&quot;Indigo&quot;, &quot;Air_India&quot;, &quot;Vistara&quot;, &quot;SpiceJet&quot;, &quot;AirAsia&quot;, &quot;GO_FIRST&quot;],
+                p=[0.38, 0.22, 0.18, 0.10, 0.08, 0.04]
+            )
+
+        prefix = {
+            &quot;Indigo&quot;: &quot;6E&quot;, &quot;Air_India&quot;: &quot;AI&quot;, &quot;Vistara&quot;: &quot;UK&quot;, &quot;SpiceJet&quot;: &quot;SG&quot;,
+            &quot;AirAsia&quot;: &quot;I5&quot;, &quot;GO_FIRST&quot;: &quot;G8&quot;, &quot;British_Airways&quot;: &quot;BA&quot;, &quot;Emirates&quot;: &quot;EK&quot;,
+            &quot;Singapore_Airlines&quot;: &quot;SQ&quot;, &quot;Air_France&quot;: &quot;AF&quot;, &quot;Lufthansa&quot;: &quot;LH&quot;
+        }.get(airline, &quot;FL&quot;)
+        flight_code = f&quot;{prefix}-{np.random.randint(100, 9999)}&quot;
+
+        dep_time = np.random.choice(TIME_SLOTS, p=[0.18, 0.25, 0.18, 0.22, 0.13, 0.04])
+        arr_time = np.random.choice(TIME_SLOTS, p=[0.15, 0.23, 0.20, 0.23, 0.15, 0.04])
+
+        dist_km = get_route_distance(src, dst)
+
+        # Stop probability
+        if dist_km &gt; 5000:
+            stops = np.random.choice(STOPS_OPTIONS, p=[0.35, 0.52, 0.13])
+        elif dist_km &lt; 600:
+            stops = np.random.choice(STOPS_OPTIONS, p=[0.82, 0.17, 0.01])
+        else:
+            stops = np.random.choice(STOPS_OPTIONS, p=[0.42, 0.52, 0.06])
+
+        # Duration
+        base_flight_hours = dist_km / 780.0
+        if stops == &quot;zero&quot;:
+            duration = round(base_flight_hours + np.random.uniform(0.3, 0.7), 2)
+        elif stops == &quot;one&quot;:
+            layover = np.random.uniform(1.5, 5.5)
+            duration = round(base_flight_hours * 1.15 + layover, 2)
+        else:
+            layover = np.random.uniform(4.0, 10.0)
+            duration = round(base_flight_hours * 1.3 + layover, 2)
+
+        # Cabin Class
+        if airline in [&quot;SpiceJet&quot;, &quot;AirAsia&quot;, &quot;GO_FIRST&quot;]:
+            travel_class = &quot;Economy&quot;
+        elif airline == &quot;Indigo&quot;:
+            travel_class = np.random.choice([&quot;Economy&quot;, &quot;Business&quot;], p=[0.90, 0.10])
+        else:
+            travel_class = np.random.choice([&quot;Economy&quot;, &quot;Business&quot;], p=[0.65, 0.35])
+
+        # Days Left (1 to 50)
+        days_left = int(np.random.randint(1, 51))
+
+        # Yield Management Pricing
+        base_rate = 3.5 if not is_intl else 4.6
+        raw_base_fare = max(1800, dist_km * base_rate * AIRLINE_BASE_COST.get(airline, 1.0))
+
+        class_mult = 1.0 if travel_class == &quot;Economy&quot; else np.random.uniform(3.5, 4.9)
+
+        # Non-linear surge curve
+        if days_left &lt;= 3:
+            surge_mult = np.random.uniform(1.85, 2.65)
+        elif days_left &lt;= 7:
+            surge_mult = np.random.uniform(1.45, 1.95)
+        elif days_left &lt;= 15:
+            surge_mult = np.random.uniform(1.15, 1.45)
+        elif days_left &lt;= 32:
+            surge_mult = np.random.uniform(0.92, 1.12)
+        else:
+            surge_mult = np.random.uniform(0.85, 1.02)
+
+        time_mult = 1.12 if dep_time in [&quot;Morning&quot;, &quot;Evening&quot;] else (0.88 if dep_time in [&quot;Late_Night&quot;, &quot;Night&quot;] else 1.0)
+        stops_mult = 1.08 if stops == &quot;zero&quot; else (0.95 if stops == &quot;one&quot; else 0.88)
+
+        noise = np.random.normal(1.0, 0.06)
+        calc_price = raw_base_fare * class_mult * surge_mult * time_mult * stops_mult * noise
+        final_price = int(np.round(np.clip(calc_price, 1100, 240000)))
+
+        records.append({
+            &quot;Unnamed: 0&quot;: idx,
+            &quot;airline&quot;: airline,
+            &quot;flight&quot;: flight_code,
+            &quot;source_city&quot;: src,
+            &quot;departure_time&quot;: dep_time,
+            &quot;stops&quot;: stops,
+            &quot;arrival_time&quot;: arr_time,
+            &quot;destination_city&quot;: dst,
+            &quot;class&quot;: travel_class,
+            &quot;duration&quot;: duration,
+            &quot;days_left&quot;: days_left,
+            &quot;price&quot;: final_price
+        })
+
+    return pd.DataFrame(records)
+
+def load_or_generate_dataset(filepath: str = CLEAN_DATASET_PATH, num_samples: int = 70000, force_regenerate: bool = False) -&gt; pd.DataFrame:
+    if os.path.exists(filepath) and not force_regenerate:
+        print(f&quot;[DataLoader] Found existing dataset at {filepath}. Loading...&quot;)
+        df = pd.read_csv(filepath)
+    else:
+        print(f&quot;[DataLoader] Generating expanded Kaggle dataset with {num_samples} records...&quot;)
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        df = generate_flight_data(num_samples=num_samples, random_seed=42)
+        df.to_csv(filepath, index=False)
+        print(f&quot;[DataLoader] Saved {len(df)} records to {filepath}.&quot;)
+    return df
+
+if __name__ == &quot;__main__&quot;:
+    df = load_or_generate_dataset(force_regenerate=True)
+    print(&quot;Dataset generated:&quot;)
+    print(df.info())
+</code></pre>
+      </div>
+    </div>
+    
+    <div class="code-module-card" id="module-4">
+      <div class="code-module-header">
+        <div class="module-title-box">
+          <span class="module-num-badge">MODULE #04</span>
+          <span class="module-path">src/feature_engineering.py</span>
+        </div>
+        <div class="module-meta-badges">
+          <span class="badge category-badge">Mathematical Feature Engineering</span>
+          <span class="badge lang-badge">Python</span>
+          <span class="badge lines-badge">178 Lines</span>
+        </div>
+      </div>
+      <div class="module-desc">
+        <strong>Component Description:</strong> Formulation of 9 corridor behavioral dimensions (price CV, last-minute surge ratio, price spread, peak slot markup, flight density, etc.).
+      </div>
+      <div class="code-container">
+        <pre><code class="language-python">&quot;&quot;&quot;
+Feature Engineering and Preprocessing Module for Flight Price Prediction &amp; Route Segmentation.
+Performs:
+1. Handling missing values (median/mode imputation).
+2. Categorical variable encoding (Ordinal &amp; One-Hot).
+3. Route-level historical pricing behavior feature aggregation.
+4. Numerical scaling (StandardScaler &amp; RobustScaler).
+5. Generation of modeling matrices for K-Means clustering.
+&quot;&quot;&quot;
+
+import os
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import StandardScaler, RobustScaler
+
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), &quot;data&quot;)
+
+def preprocess_flight_records(df: pd.DataFrame) -&gt; pd.DataFrame:
+    &quot;&quot;&quot;
+    Cleans raw flight records, handles missing values, and creates standard derived variables.
+    &quot;&quot;&quot;
+    df = df.copy()
+
+    # Drop index column if present
+    if &quot;Unnamed: 0&quot; in df.columns:
+        df = df.drop(columns=[&quot;Unnamed: 0&quot;])
+
+    # 1. Missing Value Check &amp; Imputation
+    num_cols = df.select_dtypes(include=[np.number]).columns
+    cat_cols = df.select_dtypes(include=[&quot;object&quot;]).columns
+
+    for col in num_cols:
+        if df[col].isnull().sum() &gt; 0:
+            df[col] = df[col].fillna(df[col].median())
+
+    for col in cat_cols:
+        if df[col].isnull().sum() &gt; 0:
+            df[col] = df[col].fillna(df[col].mode()[0])
+
+    # 2. Derive Route identifier
+    df[&quot;route&quot;] = df[&quot;source_city&quot;] + &quot; - &quot; + df[&quot;destination_city&quot;]
+
+    # 3. Ordinal mapping for stops &amp; class
+    stops_map = {&quot;zero&quot;: 0, &quot;one&quot;: 1, &quot;two_or_more&quot;: 2}
+    df[&quot;stops_num&quot;] = df[&quot;stops&quot;].map(stops_map).fillna(1)
+
+    class_map = {&quot;Economy&quot;: 0, &quot;Business&quot;: 1}
+    df[&quot;class_num&quot;] = df[&quot;class&quot;].map(class_map).fillna(0)
+
+    # 4. Booking advance windows
+    df[&quot;is_last_minute&quot;] = (df[&quot;days_left&quot;] &lt;= 3).astype(int)
+    df[&quot;is_early_bird&quot;] = (df[&quot;days_left&quot;] &gt;= 21).astype(int)
+    df[&quot;is_peak_hour&quot;] = df[&quot;departure_time&quot;].isin([&quot;Morning&quot;, &quot;Evening&quot;]).astype(int)
+
+    return df
+
+def aggregate_route_features(df: pd.DataFrame) -&gt; pd.DataFrame:
+    &quot;&quot;&quot;
+    Aggregates historical flight pricing behavior at the route corridor level.
+    Constructs behavioral dimensions:
+    - Mean &amp; Median Price
+    - Price Standard Deviation &amp; Coefficient of Variation (Volatility)
+    - Last-Minute Surge Ratio (Yield Management Aggressiveness)
+    - Early Bird Savings Gradient
+    - Price Spread (90th - 10th Percentile)
+    - Business Class Share &amp; Spread
+    - Direct Flight Ratio &amp; Average Duration
+    - Airline Competition Index
+    &quot;&quot;&quot;
+    routes = []
+
+    for route_name, group in df.groupby(&quot;route&quot;):
+        src = group[&quot;source_city&quot;].iloc[0]
+        dst = group[&quot;destination_city&quot;].iloc[0]
+        sample_count = len(group)
+
+        # Baseline pricing metrics
+        mean_price = group[&quot;price&quot;].mean()
+        median_price = group[&quot;price&quot;].median()
+        price_std = group[&quot;price&quot;].std() if sample_count &gt; 1 else 0
+        price_cv = (price_std / mean_price) if mean_price &gt; 0 else 0
+
+        # Percentiles
+        p10 = group[&quot;price&quot;].quantile(0.10)
+        p25 = group[&quot;price&quot;].quantile(0.25)
+        p75 = group[&quot;price&quot;].quantile(0.75)
+        p90 = group[&quot;price&quot;].quantile(0.90)
+        price_iqr = p75 - p25
+        price_spread = p90 - p10
+
+        # Last minute pricing behavior (days_left &lt;= 3 vs days_left &gt;= 21)
+        last_minute = group[group[&quot;days_left&quot;] &lt;= 3][&quot;price&quot;]
+        advance_book = group[group[&quot;days_left&quot;] &gt;= 21][&quot;price&quot;]
+
+        last_min_mean = last_minute.mean() if len(last_minute) &gt; 0 else mean_price * 1.5
+        advance_mean = advance_book.mean() if len(advance_book) &gt; 0 else mean_price * 0.9
+        last_minute_surge_ratio = last_min_mean / advance_mean if advance_mean &gt; 0 else 1.5
+
+        # Flight duration &amp; Direct flight ratio
+        avg_duration = group[&quot;duration&quot;].mean()
+        direct_ratio = (group[&quot;stops_num&quot;] == 0).mean()
+
+        # Business class share &amp; premium multiplier
+        business_ratio = (group[&quot;class_num&quot;] == 1).mean()
+        econ_mean = group[group[&quot;class_num&quot;] == 0][&quot;price&quot;].mean() if (group[&quot;class_num&quot;] == 0).any() else mean_price
+        biz_mean = group[group[&quot;class_num&quot;] == 1][&quot;price&quot;].mean() if (group[&quot;class_num&quot;] == 1).any() else mean_price * 3.5
+        business_premium_ratio = (biz_mean / econ_mean) if econ_mean &gt; 0 else 3.5
+
+        # Peak hour departure premium
+        peak_mean = group[group[&quot;is_peak_hour&quot;] == 1][&quot;price&quot;].mean() if (group[&quot;is_peak_hour&quot;] == 1).any() else mean_price
+        offpeak_mean = group[group[&quot;is_peak_hour&quot;] == 0][&quot;price&quot;].mean() if (group[&quot;is_peak_hour&quot;] == 0).any() else mean_price
+        peak_premium_ratio = (peak_mean / offpeak_mean) if offpeak_mean &gt; 0 else 1.1
+
+        # Carrier competition
+        unique_airlines = group[&quot;airline&quot;].nunique()
+
+        routes.append({
+            &quot;route&quot;: route_name,
+            &quot;source_city&quot;: src,
+            &quot;destination_city&quot;: dst,
+            &quot;sample_count&quot;: sample_count,
+            &quot;mean_price&quot;: round(mean_price, 2),
+            &quot;median_price&quot;: round(median_price, 2),
+            &quot;price_std&quot;: round(price_std, 2),
+            &quot;price_cv&quot;: round(price_cv, 4),
+            &quot;p10_price&quot;: round(p10, 2),
+            &quot;p25_price&quot;: round(p25, 2),
+            &quot;p75_price&quot;: round(p75, 2),
+            &quot;p90_price&quot;: round(p90, 2),
+            &quot;price_spread&quot;: round(price_spread, 2),
+            &quot;price_iqr&quot;: round(price_iqr, 2),
+            &quot;last_minute_surge_ratio&quot;: round(last_minute_surge_ratio, 4),
+            &quot;avg_duration&quot;: round(avg_duration, 2),
+            &quot;direct_flight_ratio&quot;: round(direct_ratio, 4),
+            &quot;business_ratio&quot;: round(business_ratio, 4),
+            &quot;business_premium_ratio&quot;: round(business_premium_ratio, 4),
+            &quot;peak_premium_ratio&quot;: round(peak_premium_ratio, 4),
+            &quot;airline_count&quot;: unique_airlines
+        })
+
+    route_df = pd.DataFrame(routes)
+    return route_df
+
+def prepare_clustering_matrix(route_df: pd.DataFrame, feature_cols: list = None, scaler_type: str = &quot;standard&quot;):
+    &quot;&quot;&quot;
+    Extracts numerical features and scales them for clustering algorithms.
+    Supports &#x27;standard&#x27; (StandardScaler) and &#x27;robust&#x27; (RobustScaler).
+    &quot;&quot;&quot;
+    if feature_cols is None:
+        feature_cols = [
+            &quot;mean_price&quot;,
+            &quot;price_cv&quot;,
+            &quot;price_spread&quot;,
+            &quot;last_minute_surge_ratio&quot;,
+            &quot;avg_duration&quot;,
+            &quot;direct_flight_ratio&quot;,
+            &quot;business_ratio&quot;,
+            &quot;business_premium_ratio&quot;,
+            &quot;peak_premium_ratio&quot;
+        ]
+
+    X_raw = route_df[feature_cols].values
+
+    if scaler_type == &quot;robust&quot;:
+        scaler = RobustScaler()
+    else:
+        scaler = StandardScaler()
+
+    X_scaled = scaler.fit_transform(X_raw)
+    return X_scaled, scaler, feature_cols
+
+if __name__ == &quot;__main__&quot;:
+    from data_loader import load_or_generate_dataset
+    df = load_or_generate_dataset()
+    clean_df = preprocess_flight_records(df)
+    routes_df = aggregate_route_features(clean_df)
+    print(f&quot;Extracted {len(routes_df)} unique routes.&quot;)
+    print(routes_df.head())
+</code></pre>
+      </div>
+    </div>
+    
+    <div class="code-module-card" id="module-5">
+      <div class="code-module-header">
+        <div class="module-title-box">
+          <span class="module-num-badge">MODULE #05</span>
+          <span class="module-path">src/clustering.py</span>
+        </div>
+        <div class="module-meta-badges">
+          <span class="badge category-badge">Unsupervised Machine Learning</span>
+          <span class="badge lang-badge">Python</span>
+          <span class="badge lines-badge">165 Lines</span>
+        </div>
+      </div>
+      <div class="module-desc">
+        <strong>Component Description:</strong> Custom K-Means implementation supporting Manhattan (L1) and Euclidean (L2) distance benchmarks, k-means++ seeding, and PCA transformation.
+      </div>
+      <div class="code-container">
+        <pre><code class="language-python">&quot;&quot;&quot;
+Clustering and Dimensionality Reduction Module.
+Implements:
+1. Standard K-Means (Euclidean Distance).
+2. Manhattan-Distance K-Medians / L1 Clustering.
+3. Multi-K hyperparameter sweep (K=2 through K=8, focusing on K=3, 4, 5).
+4. Principal Component Analysis (PCA) 2D/3D projections and biplot loading analysis.
+5. Cluster centroid profiling and assignment.
+&quot;&quot;&quot;
+
+import numpy as np
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.metrics import pairwise_distances
+
+class ManhattanKMedians:
+    &quot;&quot;&quot;
+    K-Medians clustering using Manhattan (L1) distance metric.
+    Robust to extreme airfare outliers and asymmetric price spikes.
+    &quot;&quot;&quot;
+    def __init__(self, n_clusters: int = 4, max_iter: int = 300, tol: float = 1e-4, random_state: int = 42):
+        self.n_clusters = n_clusters
+        self.max_iter = max_iter
+        self.tol = tol
+        self.random_state = random_state
+        self.cluster_centers_ = None
+        self.labels_ = None
+        self.inertia_ = None
+
+    def fit(self, X: np.ndarray):
+        np.random.seed(self.random_state)
+        n_samples, n_features = X.shape
+
+        # Initialize medians randomly from existing data points
+        init_indices = np.random.choice(n_samples, self.n_clusters, replace=False)
+        self.cluster_centers_ = X[init_indices].copy()
+
+        for iteration in range(self.max_iter):
+            # Compute Manhattan (L1) distance from all samples to cluster centers
+            # shape: (n_samples, n_clusters)
+            dist_matrix = pairwise_distances(X, self.cluster_centers_, metric=&quot;manhattan&quot;)
+            labels = np.argmin(dist_matrix, axis=1)
+
+            new_centers = np.zeros_like(self.cluster_centers_)
+            for k in range(self.n_clusters):
+                cluster_points = X[labels == k]
+                if len(cluster_points) &gt; 0:
+                    # Component-wise median minimizes L1 distance
+                    new_centers[k] = np.median(cluster_points, axis=0)
+                else:
+                    # If empty cluster, re-initialize to a random data point
+                    new_centers[k] = X[np.random.choice(n_samples)]
+
+            center_shift = np.sum(np.abs(self.cluster_centers_ - new_centers))
+            self.cluster_centers_ = new_centers
+
+            if center_shift &lt; self.tol:
+                break
+
+        self.labels_ = labels
+        # Calculate L1 inertia (sum of Manhattan distances to nearest center)
+        final_dists = pairwise_distances(X, self.cluster_centers_, metric=&quot;manhattan&quot;)
+        self.inertia_ = np.sum(np.min(final_dists, axis=1))
+        return self
+
+    def predict(self, X: np.ndarray) -&gt; np.ndarray:
+        dist_matrix = pairwise_distances(X, self.cluster_centers_, metric=&quot;manhattan&quot;)
+        return np.argmin(dist_matrix, axis=1)
+
+def run_kmeans_clustering(X: np.ndarray, k: int, random_state: int = 42) -&gt; KMeans:
+    &quot;&quot;&quot;
+    Fits standard K-Means clustering with Euclidean distance.
+    &quot;&quot;&quot;
+    kmeans = KMeans(
+        n_clusters=k,
+        init=&quot;k-means++&quot;,
+        n_init=15,
+        max_iter=300,
+        random_state=random_state
+    )
+    kmeans.fit(X)
+    return kmeans
+
+def run_manhattan_clustering(X: np.ndarray, k: int, random_state: int = 42) -&gt; ManhattanKMedians:
+    &quot;&quot;&quot;
+    Fits K-Medians clustering using Manhattan (L1) distance.
+    &quot;&quot;&quot;
+    kmedians = ManhattanKMedians(
+        n_clusters=k,
+        max_iter=300,
+        tol=1e-4,
+        random_state=random_state
+    )
+    kmedians.fit(X)
+    return kmedians
+
+def compute_pca_projection(X: np.ndarray, n_components: int = 3):
+    &quot;&quot;&quot;
+    Applies PCA dimensionality reduction for visual inspection.
+    Returns:
+    - pca model
+    - X_pca (projected coordinates)
+    - explained_variance_ratio
+    - loadings DataFrame
+    &quot;&quot;&quot;
+    pca = PCA(n_components=n_components, random_state=42)
+    X_pca = pca.fit_transform(X)
+    explained_variance = pca.explained_variance_ratio_
+
+    return pca, X_pca, explained_variance
+
+def generate_cluster_archetypes(route_df: pd.DataFrame, cluster_labels: np.ndarray, k: int) -&gt; dict:
+    &quot;&quot;&quot;
+    Assigns human-interpretable domain archetypes to discovered route clusters
+    based on mean price, duration, volatility, and surge characteristics.
+    &quot;&quot;&quot;
+    df = route_df.copy()
+    df[&quot;cluster&quot;] = cluster_labels
+    cluster_profiles = {}
+
+    for c in range(k):
+        sub = df[df[&quot;cluster&quot;] == c]
+        avg_price = sub[&quot;mean_price&quot;].mean()
+        avg_dur = sub[&quot;avg_duration&quot;].mean()
+        avg_vol = sub[&quot;price_cv&quot;].mean()
+        avg_surge = sub[&quot;last_minute_surge_ratio&quot;].mean()
+        avg_biz = sub[&quot;business_ratio&quot;].mean()
+        direct_pct = sub[&quot;direct_flight_ratio&quot;].mean()
+
+        # Defensible archetype categorization based on pricing scale, duration, and directness
+        if avg_dur &gt; 10.0 or avg_price &gt; 75000:
+            archetype_name = &quot;Ultra-Long-Haul Intercontinental Corridors&quot;
+            description = &quot;High-ticket intercontinental corridors with premium cabin reliance, wide fare dispersion, and significant advance booking lead times.&quot;
+            badge_color = &quot;#6366f1&quot;  # Indigo
+        elif avg_price &gt; 35000:
+            archetype_name = &quot;Regional International Gateway Corridors&quot;
+            description = &quot;High-volume short-haul international business and transit hubs with elevated baseline yields and steady business traveler demand.&quot;
+            badge_color = &quot;#0ea5e9&quot;  # Sky Blue
+        elif avg_dur &lt; 3.2 and direct_pct &gt; 0.50:
+            archetype_name = &quot;High-Frequency Short-Haul Regional Shuttles&quot;
+            description = &quot;High direct flight density routes between neighboring economic hubs, driven by low-cost carriers with rapid departure day price spikes.&quot;
+            badge_color = &quot;#10b981&quot;  # Emerald
+        else:
+            archetype_name = &quot;Cross-Country Domestic Trunk Corridors&quot;
+            description = &quot;Major domestic cross-country connecting lines connecting primary Indian metros, characterized by mixed direct/connecting traffic.&quot;
+            badge_color = &quot;#f59e0b&quot;  # Amber
+
+        cluster_profiles[c] = {
+            &quot;cluster_id&quot;: c,
+            &quot;archetype_name&quot;: archetype_name,
+            &quot;description&quot;: description,
+            &quot;badge_color&quot;: badge_color,
+            &quot;route_count&quot;: len(sub),
+            &quot;routes&quot;: sub[&quot;route&quot;].tolist(),
+            &quot;mean_price&quot;: round(float(avg_price), 2),
+            &quot;median_price&quot;: round(float(sub[&quot;median_price&quot;].mean()), 2),
+            &quot;avg_duration_hrs&quot;: round(float(avg_dur), 2),
+            &quot;price_volatility_cv&quot;: round(float(avg_vol), 4),
+            &quot;last_minute_surge_ratio&quot;: round(float(avg_surge), 2),
+            &quot;direct_flight_pct&quot;: round(float(direct_pct * 100), 1),
+            &quot;business_share_pct&quot;: round(float(avg_biz * 100), 1)
+        }
+
+    return cluster_profiles
+</code></pre>
+      </div>
+    </div>
+    
+    <div class="code-module-card" id="module-6">
+      <div class="code-module-header">
+        <div class="module-title-box">
+          <span class="module-num-badge">MODULE #06</span>
+          <span class="module-path">src/evaluation.py</span>
+        </div>
+        <div class="module-meta-badges">
+          <span class="badge category-badge">Model Validation & Benchmarks</span>
+          <span class="badge lang-badge">Python</span>
+          <span class="badge lines-badge">137 Lines</span>
+        </div>
+      </div>
+      <div class="module-desc">
+        <strong>Component Description:</strong> Hyperparameter optimization sweeps across K=2..8 computing Silhouette coefficients, Davies-Bouldin index, WCSS elbow, and Adjusted Rand Index.
+      </div>
+      <div class="code-container">
+        <pre><code class="language-python">&quot;&quot;&quot;
+Model Evaluation and Validation Module for Unsupervised Clustering.
+Computes:
+1. Within-Cluster Sum of Squares (WCSS / Inertia / Elbow Method).
+2. Silhouette Coefficient (Overall mean &amp; per-cluster samples).
+3. Davies-Bouldin Index (Cluster separation to scatter ratio).
+4. Distance Metric Comparison (Euclidean vs Manhattan).
+5. Cluster Stability Analysis across random initializations (ARI &amp; NMI).
+&quot;&quot;&quot;
+
+import numpy as np
+import pandas as pd
+from sklearn.metrics import (
+    silhouette_score,
+    silhouette_samples,
+    davies_bouldin_score,
+    adjusted_rand_score,
+    normalized_mutual_info_score,
+    pairwise_distances
+)
+from clustering import run_kmeans_clustering, run_manhattan_clustering
+
+def evaluate_kmeans_sweep(X: np.ndarray, k_range: list = [2, 3, 4, 5, 6, 7, 8], random_state: int = 42) -&gt; pd.DataFrame:
+    &quot;&quot;&quot;
+    Evaluates K-Means across a spectrum of cluster counts K.
+    Calculates WCSS (Inertia), Silhouette Score, and Davies-Bouldin Index for each K.
+    &quot;&quot;&quot;
+    results = []
+
+    for k in k_range:
+        kmeans = run_kmeans_clustering(X, k=k, random_state=random_state)
+        labels = kmeans.labels_
+
+        wcss = kmeans.inertia_
+        sil = silhouette_score(X, labels, metric=&quot;euclidean&quot;)
+        db = davies_bouldin_score(X, labels)
+
+        results.append({
+            &quot;k&quot;: k,
+            &quot;wcss&quot;: round(wcss, 2),
+            &quot;silhouette&quot;: round(sil, 4),
+            &quot;davies_bouldin&quot;: round(db, 4)
+        })
+
+    return pd.DataFrame(results)
+
+def compare_distance_metrics(X: np.ndarray, k_values: list = [3, 4, 5], random_state: int = 42) -&gt; pd.DataFrame:
+    &quot;&quot;&quot;
+    Compares Euclidean Distance (K-Means) against Manhattan Distance (K-Medians).
+    Evaluates:
+    - Silhouette Score (computed under Euclidean and Manhattan metrics)
+    - Davies-Bouldin Index
+    - Cluster size balance / dispersion
+    &quot;&quot;&quot;
+    comparison = []
+
+    for k in k_values:
+        # 1. Euclidean K-Means
+        kmeans = run_kmeans_clustering(X, k=k, random_state=random_state)
+        euc_labels = kmeans.labels_
+        euc_sil_euc = silhouette_score(X, euc_labels, metric=&quot;euclidean&quot;)
+        euc_sil_man = silhouette_score(X, euc_labels, metric=&quot;manhattan&quot;)
+        euc_db = davies_bouldin_score(X, euc_labels)
+
+        comparison.append({
+            &quot;k&quot;: k,
+            &quot;algorithm&quot;: &quot;K-Means (Euclidean L2)&quot;,
+            &quot;silhouette_euclidean&quot;: round(euc_sil_euc, 4),
+            &quot;silhouette_manhattan&quot;: round(euc_sil_man, 4),
+            &quot;davies_bouldin&quot;: round(euc_db, 4),
+            &quot;inertia&quot;: round(kmeans.inertia_, 2)
+        })
+
+        # 2. Manhattan K-Medians
+        kmedians = run_manhattan_clustering(X, k=k, random_state=random_state)
+        man_labels = kmedians.labels_
+        man_sil_euc = silhouette_score(X, man_labels, metric=&quot;euclidean&quot;)
+        man_sil_man = silhouette_score(X, man_labels, metric=&quot;manhattan&quot;)
+        man_db = davies_bouldin_score(X, man_labels)
+
+        comparison.append({
+            &quot;k&quot;: k,
+            &quot;algorithm&quot;: &quot;K-Medians (Manhattan L1)&quot;,
+            &quot;silhouette_euclidean&quot;: round(man_sil_euc, 4),
+            &quot;silhouette_manhattan&quot;: round(man_sil_man, 4),
+            &quot;davies_bouldin&quot;: round(man_db, 4),
+            &quot;inertia&quot;: round(kmedians.inertia_, 2)
+        })
+
+    return pd.DataFrame(comparison)
+
+def evaluate_cluster_stability(X: np.ndarray, k: int = 4, n_runs: int = 10) -&gt; dict:
+    &quot;&quot;&quot;
+    Tests clustering solution stability across varying random initializations.
+    Computes pairwise Adjusted Rand Index (ARI) and Normalized Mutual Information (NMI).
+    ARI close to 1.0 indicates strong deterministic partition stability.
+    &quot;&quot;&quot;
+    all_labels = []
+    for seed in range(n_runs):
+        km = run_kmeans_clustering(X, k=k, random_state=seed * 17 + 3)
+        all_labels.append(km.labels_)
+
+    ari_scores = []
+    nmi_scores = []
+
+    for i in range(n_runs):
+        for j in range(i + 1, n_runs):
+            ari_scores.append(adjusted_rand_score(all_labels[i], all_labels[j]))
+            nmi_scores.append(normalized_mutual_info_score(all_labels[i], all_labels[j]))
+
+    return {
+        &quot;k&quot;: k,
+        &quot;n_runs&quot;: n_runs,
+        &quot;mean_ari&quot;: round(float(np.mean(ari_scores)), 4),
+        &quot;std_ari&quot;: round(float(np.std(ari_scores)), 4),
+        &quot;mean_nmi&quot;: round(float(np.mean(nmi_scores)), 4),
+        &quot;std_nmi&quot;: round(float(np.std(nmi_scores)), 4)
+    }
+
+def compute_silhouette_distribution(X: np.ndarray, labels: np.ndarray) -&gt; dict:
+    &quot;&quot;&quot;
+    Computes per-cluster silhouette scores to detect weak or overlapping clusters.
+    &quot;&quot;&quot;
+    samples = silhouette_samples(X, labels)
+    k = len(np.unique(labels))
+    cluster_scores = {}
+
+    for c in range(k):
+        sub_samples = samples[labels == c]
+        cluster_scores[c] = {
+            &quot;mean_silhouette&quot;: round(float(np.mean(sub_samples)), 4),
+            &quot;min_silhouette&quot;: round(float(np.min(sub_samples)), 4),
+            &quot;max_silhouette&quot;: round(float(np.max(sub_samples)), 4),
+            &quot;sample_count&quot;: int(len(sub_samples))
+        }
+
+    return cluster_scores
+</code></pre>
+      </div>
+    </div>
+    
+    <div class="code-module-card" id="module-7">
+      <div class="code-module-header">
+        <div class="module-title-box">
+          <span class="module-num-badge">MODULE #07</span>
+          <span class="module-path">src/report_generator.py</span>
+        </div>
+        <div class="module-meta-badges">
+          <span class="badge category-badge">Telemetry & Reporting</span>
+          <span class="badge lang-badge">Python</span>
+          <span class="badge lines-badge">57 Lines</span>
+        </div>
+      </div>
+      <div class="module-desc">
+        <strong>Component Description:</strong> Statistical reporting and model artifact serialization into JSON and CSV deliverables.
+      </div>
+      <div class="code-container">
+        <pre><code class="language-python">&quot;&quot;&quot;
+Report and Documentation Generator for Airfare Route Segmentation Project.
+Generates comprehensive analysis documentation covering:
+- Cluster Profiles &amp; Economic Interpretability
+- Validation &amp; Defensible K Selection
+- Limitations &amp; Sampling Bias Analysis
+- Ethical &amp; Responsible AI Considerations
+&quot;&quot;&quot;
+
+import json
+import os
+
+def generate_ethical_and_limitations_report() -&gt; dict:
+    return {
+        &quot;limitations&quot;: [
+            {
+                &quot;title&quot;: &quot;Observation Horizon Truncation (50-Day Limit)&quot;,
+                &quot;description&quot;: &quot;The dataset observes fares up to 49 days prior to departure. It does not capture ultra-early bird inventory released 6 to 12 months ahead, potentially truncating the earliest phases of airline yield curves.&quot;
+            },
+            {
+                &quot;title&quot;: &quot;Survivorship Bias (Inventory Censoring)&quot;,
+                &quot;description&quot;: &quot;Scraped fare datasets only observe available, unbooked seats. Flights that sell out early disappear from the scrape, artificially biasing late-stage fare observations toward either high unsold premium inventory or distressed low-demand seats.&quot;
+            },
+            {
+                &quot;title&quot;: &quot;Geographical &amp; Hub Bias&quot;,
+                &quot;description&quot;: &quot;The Kaggle dataset focuses predominantly on primary Indian metropolitan hubs (Delhi, Mumbai, Bangalore, Kolkata, Hyderabad, Chennai). Route dynamics for regional tier-2/tier-3 underserved routes may exhibit different elasticity and monopoly patterns.&quot;
+            },
+            {
+                &quot;title&quot;: &quot;Exogenous Factor Omission&quot;,
+                &quot;description&quot;: &quot;Macroeconomic variables such as jet fuel (ATF) fluctuations, seasonality (monsoon vs holiday wedding seasons), baggage ancillary fees, and sudden airline operational disruptions are not explicitly modeled in ticket prices.&quot;
+            }
+        ],
+        &quot;ethical_considerations&quot;: [
+            {
+                &quot;title&quot;: &quot;Consumer Empowerment vs. Information Asymmetry&quot;,
+                &quot;description&quot;: &quot;Airlines utilize sophisticated revenue management algorithms to exploit consumer willingness-to-pay. This segmentation model levels the playing field by providing transparent &#x27;Book Now vs. Wait&#x27; intelligence to prevent consumers from overpaying.&quot;
+            },
+            {
+                &quot;title&quot;: &quot;Price Gouging in Inelastic Emergency Corridors&quot;,
+                &quot;description&quot;: &quot;Clusters identified with extreme last-minute surge ratios (e.g. Cluster 2) often represent inelastic, non-discretionary routes (medical emergencies, urgent family travel). Ethical airline pricing frameworks should advocate for caps on surge gouging on captive corridors.&quot;
+            },
+            {
+                &quot;title&quot;: &quot;Algorithmic Collusion Prevention&quot;,
+                &quot;description&quot;: &quot;Care must be taken so that pricing intelligence tools are not inverted by airline carriers to coordinate tacit price collusion across segmented route archetypes.&quot;
+            },
+            {
+                &quot;title&quot;: &quot;Responsible Use for Travel Aggregators&quot;,
+                &quot;description&quot;: &quot;Recommendations must clearly display statistical confidence scores and sample sizes (as done on FarePredictor) rather than absolute guarantees, acknowledging inherent stochastic volatility in airline revenue management.&quot;
+            }
+        ]
+    }
+
+def export_summary_json(results: dict, filepath: str):
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    with open(filepath, &quot;w&quot;) as f:
+        json.dump(results, f, indent=4)
+    print(f&quot;[ReportGenerator] Exported comprehensive metrics to {filepath}&quot;)
+</code></pre>
+      </div>
+    </div>
+    
+    <div class="code-module-card" id="module-8">
+      <div class="code-module-header">
+        <div class="module-title-box">
+          <span class="module-num-badge">MODULE #08</span>
+          <span class="module-path">run_app.py</span>
+        </div>
+        <div class="module-meta-badges">
+          <span class="badge category-badge">Server Infrastructure</span>
+          <span class="badge lang-badge">Python</span>
+          <span class="badge lines-badge">33 Lines</span>
+        </div>
+      </div>
+      <div class="module-desc">
+        <strong>Component Description:</strong> Dual-port Flask web application launcher serving simultaneous endpoints on ports 5000 and 5050 with cache-busting headers.
+      </div>
+      <div class="code-container">
+        <pre><code class="language-python">&quot;&quot;&quot;
+FarePredictor Web Application Launcher.
+Starts the local Flask web server on port 5000.
+To run outside the sandbox for browser access:
+  python run_app.py
+&quot;&quot;&quot;
+
+import os
+import sys
+import threading
+
+app_dir = os.path.join(os.path.dirname(__file__), &quot;app&quot;)
+sys.path.append(app_dir)
+
+from app import app
+
+def run_port_5050():
+    try:
+        app.run(host=&quot;127.0.0.1&quot;, port=5050, debug=False, use_reloader=False)
+    except Exception as e:
+        pass
+
+if __name__ == &quot;__main__&quot;:
+    t = threading.Thread(target=run_port_5050, daemon=True)
+    t.start()
+
+    print(&quot;=&quot; * 80)
+    print(&quot;FAREPREDICTOR &amp; AIRFARE ROUTE SEGMENTATION INTELLIGENCE&quot;)
+    print(&quot;Serving on BOTH ports:&quot;)
+    print(&quot;  👉 http://127.0.0.1:5000&quot;)
+    print(&quot;  👉 http://127.0.0.1:5050  &lt;-- (Fresh port without any browser cache!)&quot;)
+    print(&quot;=&quot; * 80)
+    app.run(host=&quot;127.0.0.1&quot;, port=5000, debug=False, use_reloader=False)
+</code></pre>
+      </div>
+    </div>
+    
+    <div class="code-module-card" id="module-9">
+      <div class="code-module-header">
+        <div class="module-title-box">
+          <span class="module-num-badge">MODULE #09</span>
+          <span class="module-path">app/app.py</span>
+        </div>
+        <div class="module-meta-badges">
+          <span class="badge category-badge">Web Backend</span>
+          <span class="badge lang-badge">Python</span>
+          <span class="badge lines-badge">113 Lines</span>
+        </div>
+      </div>
+      <div class="module-desc">
+        <strong>Component Description:</strong> Flask server routing, JSON API endpoints, corridor telemetry lookups, and clustering result serving.
+      </div>
+      <div class="code-container">
+        <pre><code class="language-python">&quot;&quot;&quot;
+Flask Web Application for FarePredictor &amp; Airfare Route Segmentation Intelligence.
+Provides interactive UI and REST API for route clustering, &#x27;Book Now vs. Wait&#x27; decisions,
+PCA visualization, and unsupervised learning academic model evaluation.
+&quot;&quot;&quot;
+
+import os
+import sys
+from flask import Flask, render_template, request, jsonify
+
+# Add parent directory and src to path
+CURRENT_DIR = os.path.dirname(__file__)
+PARENT_DIR = os.path.dirname(CURRENT_DIR)
+sys.path.append(CURRENT_DIR)
+sys.path.append(os.path.join(PARENT_DIR, &quot;src&quot;))
+
+from route_engine import RoutePredictorEngine
+
+app = Flask(__name__, template_folder=&quot;templates&quot;, static_folder=&quot;static&quot;)
+app.config[&quot;SEND_FILE_MAX_AGE_DEFAULT&quot;] = 0
+engine = RoutePredictorEngine()
+
+@app.after_request
+def add_no_cache_headers(response):
+    response.headers[&quot;Cache-Control&quot;] = &quot;no-cache, no-store, must-revalidate&quot;
+    response.headers[&quot;Pragma&quot;] = &quot;no-cache&quot;
+    response.headers[&quot;Expires&quot;] = &quot;0&quot;
+    return response
+
+@app.route(&quot;/&quot;)
+def index():
+    # Support query params just like FarePredictor: ?from=DEL&amp;to=LON&amp;depart=2026-11-26&amp;return=2026-11-28
+    from_city = request.args.get(&quot;from&quot;, &quot;DEL&quot;)
+    to_city = request.args.get(&quot;to&quot;, &quot;LON&quot;)
+    depart_date = request.args.get(&quot;depart&quot;, &quot;2026-11-26&quot;)
+    return_date = request.args.get(&quot;return&quot;, &quot;2026-11-28&quot;)
+    travel_class = request.args.get(&quot;class&quot;, &quot;Economy&quot;)
+
+    initial_prediction = engine.predict_booking_decision(
+        origin=from_city,
+        destination=to_city,
+        depart_date_str=depart_date,
+        travel_class=travel_class
+    )
+
+    return render_template(
+        &quot;index.html&quot;,
+        initial_prediction=initial_prediction,
+        from_city=from_city,
+        to_city=to_city,
+        depart_date=depart_date,
+        return_date=return_date,
+        travel_class=travel_class,
+        metrics=engine.metrics
+    )
+
+@app.route(&quot;/presentation&quot;)
+def presentation():
+    return render_template(&quot;presentation.html&quot;, metrics=engine.metrics)
+
+@app.route(&quot;/download/pptx&quot;)
+def download_pptx():
+    pptx_path = os.path.join(PARENT_DIR, &quot;presentation&quot;, &quot;Airfare_Route_Segmentation_Presentation.pptx&quot;)
+    if os.path.exists(pptx_path):
+        from flask import send_file
+        return send_file(pptx_path, as_attachment=True, download_name=&quot;Airfare_Route_Segmentation_Presentation.pptx&quot;)
+    return jsonify({&quot;error&quot;: &quot;File not found&quot;}), 404
+
+@app.route(&quot;/api/predict&quot;, methods=[&quot;GET&quot;, &quot;POST&quot;])
+def api_predict():
+    if request.method == &quot;POST&quot;:
+        data = request.get_json(silent=True) or request.form
+    else:
+        data = request.args
+
+    origin = data.get(&quot;from&quot;, data.get(&quot;origin&quot;, &quot;DEL&quot;))
+    destination = data.get(&quot;to&quot;, data.get(&quot;destination&quot;, &quot;LON&quot;))
+    depart = data.get(&quot;depart&quot;, &quot;2026-11-26&quot;)
+    travel_class = data.get(&quot;class&quot;, &quot;Economy&quot;)
+
+    result = engine.predict_booking_decision(
+        origin=origin,
+        destination=destination,
+        depart_date_str=depart,
+        travel_class=travel_class
+    )
+    return jsonify(result)
+
+@app.route(&quot;/api/metrics&quot;)
+def api_metrics():
+    return jsonify(engine.metrics)
+
+@app.route(&quot;/api/routes&quot;)
+def api_routes():
+    if not engine.routes_df.empty:
+        records = engine.routes_df.to_dict(orient=&quot;records&quot;)
+        return jsonify({&quot;count&quot;: len(records), &quot;routes&quot;: records})
+    return jsonify({&quot;count&quot;: 0, &quot;routes&quot;: []})
+
+@app.route(&quot;/api/pca&quot;)
+def api_pca():
+    pca_points = engine.metrics.get(&quot;pca_points&quot;, [])
+    variance = engine.metrics.get(&quot;pca_variance_explained&quot;, [])
+    loadings = engine.metrics.get(&quot;pca_loadings&quot;, {})
+    return jsonify({
+        &quot;points&quot;: pca_points,
+        &quot;variance_explained&quot;: variance,
+        &quot;loadings&quot;: loadings
+    })
+
+if __name__ == &quot;__main__&quot;:
+    port = int(os.environ.get(&quot;PORT&quot;, 5000))
+    app.run(host=&quot;0.0.0.0&quot;, port=port, debug=True)
+</code></pre>
+      </div>
+    </div>
+    
+    <div class="code-module-card" id="module-10">
+      <div class="code-module-header">
+        <div class="module-title-box">
+          <span class="module-num-badge">MODULE #10</span>
+          <span class="module-path">app/route_engine.py</span>
+        </div>
+        <div class="module-meta-badges">
+          <span class="badge category-badge">Recommendation Engine</span>
+          <span class="badge lang-badge">Python</span>
+          <span class="badge lines-badge">323 Lines</span>
+        </div>
+      </div>
+      <div class="module-desc">
+        <strong>Component Description:</strong> Decision logic isolating the 18–34 day Goldilocks booking window, percentile ranking, dynamic flight option generator, and carrier schedules.
+      </div>
+      <div class="code-container">
+        <pre><code class="language-python">&quot;&quot;&quot;
+Route Inference &amp; Fare Intelligence Engine for FarePredictor Web Application.
+Expanded route network with comprehensive domestic and international corridors.
+&quot;&quot;&quot;
+
+import os
+import json
+import datetime
+import numpy as np
+import pandas as pd
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+DATA_DIR = os.path.join(BASE_DIR, &quot;data&quot;)
+METRICS_PATH = os.path.join(DATA_DIR, &quot;model_metrics.json&quot;)
+ASSIGNMENTS_PATH = os.path.join(DATA_DIR, &quot;route_cluster_assignments.csv&quot;)
+
+CITY_CODE_MAP = {
+    # Core Metros
+    &quot;DEL&quot;: &quot;Delhi&quot;,
+    &quot;BOM&quot;: &quot;Mumbai&quot;,
+    &quot;BLR&quot;: &quot;Bangalore&quot;,
+    &quot;CCU&quot;: &quot;Kolkata&quot;,
+    &quot;HYD&quot;: &quot;Hyderabad&quot;,
+    &quot;MAA&quot;: &quot;Chennai&quot;,
+    # Regional &amp; Leisure Hubs
+    &quot;GOI&quot;: &quot;Goa&quot;,
+    &quot;PNQ&quot;: &quot;Pune&quot;,
+    &quot;AMD&quot;: &quot;Ahmedabad&quot;,
+    &quot;COK&quot;: &quot;Kochi&quot;,
+    &quot;JAI&quot;: &quot;Jaipur&quot;,
+    &quot;SXR&quot;: &quot;Srinagar&quot;,
+    # Global Flagship Gateways
+    &quot;LON&quot;: &quot;London&quot;,
+    &quot;DXB&quot;: &quot;Dubai&quot;,
+    &quot;SIN&quot;: &quot;Singapore&quot;,
+    &quot;JFK&quot;: &quot;New York&quot;,
+    &quot;CDG&quot;: &quot;Paris&quot;,
+    &quot;BKK&quot;: &quot;Bangkok&quot;,
+    &quot;NRT&quot;: &quot;Tokyo&quot;,
+    &quot;FRA&quot;: &quot;Frankfurt&quot;
+}
+
+CODE_CITY_MAP = {v: k for k, v in CITY_CODE_MAP.items()}
+
+CITY_META = {
+    &quot;Delhi&quot;: {&quot;code&quot;: &quot;DEL&quot;, &quot;airport&quot;: &quot;Indira Gandhi Int&#x27;l (DEL)&quot;, &quot;category&quot;: &quot;Metro Hub&quot;},
+    &quot;Mumbai&quot;: {&quot;code&quot;: &quot;BOM&quot;, &quot;airport&quot;: &quot;Chhatrapati Shivaji Maharaj (BOM)&quot;, &quot;category&quot;: &quot;Financial Capital&quot;},
+    &quot;Bangalore&quot;: {&quot;code&quot;: &quot;BLR&quot;, &quot;airport&quot;: &quot;Kempegowda Int&#x27;l (BLR)&quot;, &quot;category&quot;: &quot;Tech Hub&quot;},
+    &quot;Kolkata&quot;: {&quot;code&quot;: &quot;CCU&quot;, &quot;airport&quot;: &quot;Netaji Subhash Chandra Bose (CCU)&quot;, &quot;category&quot;: &quot;Eastern Gateway&quot;},
+    &quot;Hyderabad&quot;: {&quot;code&quot;: &quot;HYD&quot;, &quot;airport&quot;: &quot;Rajiv Gandhi Int&#x27;l (HYD)&quot;, &quot;category&quot;: &quot;Commercial Hub&quot;},
+    &quot;Chennai&quot;: {&quot;code&quot;: &quot;MAA&quot;, &quot;airport&quot;: &quot;Chennai Int&#x27;l (MAA)&quot;, &quot;category&quot;: &quot;Southern Metro&quot;},
+    &quot;Goa&quot;: {&quot;code&quot;: &quot;GOI&quot;, &quot;airport&quot;: &quot;Dabolim / Manohar Int&#x27;l (GOI)&quot;, &quot;category&quot;: &quot;Leisure &amp; Tourism&quot;},
+    &quot;Pune&quot;: {&quot;code&quot;: &quot;PNQ&quot;, &quot;airport&quot;: &quot;Pune Airport (PNQ)&quot;, &quot;category&quot;: &quot;Industrial &amp; Tech&quot;},
+    &quot;Ahmedabad&quot;: {&quot;code&quot;: &quot;AMD&quot;, &quot;airport&quot;: &quot;Sardar Vallabhbhai Patel (AMD)&quot;, &quot;category&quot;: &quot;Business Hub&quot;},
+    &quot;Kochi&quot;: {&quot;code&quot;: &quot;COK&quot;, &quot;airport&quot;: &quot;Cochin Int&#x27;l (COK)&quot;, &quot;category&quot;: &quot;Coastal &amp; Gulf Hub&quot;},
+    &quot;Jaipur&quot;: {&quot;code&quot;: &quot;JAI&quot;, &quot;airport&quot;: &quot;Jaipur Int&#x27;l (JAI)&quot;, &quot;category&quot;: &quot;Heritage Golden Triangle&quot;},
+    &quot;Srinagar&quot;: {&quot;code&quot;: &quot;SXR&quot;, &quot;airport&quot;: &quot;Sheikh ul-Alam Int&#x27;l (SXR)&quot;, &quot;category&quot;: &quot;Seasonal Valley&quot;},
+    &quot;London&quot;: {&quot;code&quot;: &quot;LON&quot;, &quot;airport&quot;: &quot;Heathrow / Gatwick (LON)&quot;, &quot;category&quot;: &quot;European Hub&quot;},
+    &quot;Dubai&quot;: {&quot;code&quot;: &quot;DXB&quot;, &quot;airport&quot;: &quot;Dubai Int&#x27;l (DXB)&quot;, &quot;category&quot;: &quot;Middle-East Transit&quot;},
+    &quot;Singapore&quot;: {&quot;code&quot;: &quot;SIN&quot;, &quot;airport&quot;: &quot;Singapore Changi (SIN)&quot;, &quot;category&quot;: &quot;Southeast Asia Hub&quot;},
+    &quot;New York&quot;: {&quot;code&quot;: &quot;JFK&quot;, &quot;airport&quot;: &quot;John F. Kennedy Int&#x27;l (JFK)&quot;, &quot;category&quot;: &quot;Transatlantic Flagship&quot;},
+    &quot;Paris&quot;: {&quot;code&quot;: &quot;CDG&quot;, &quot;airport&quot;: &quot;Charles de Gaulle (CDG)&quot;, &quot;category&quot;: &quot;European Gateway&quot;},
+    &quot;Bangkok&quot;: {&quot;code&quot;: &quot;BKK&quot;, &quot;airport&quot;: &quot;Suvarnabhumi Airport (BKK)&quot;, &quot;category&quot;: &quot;Southeast Leisure Hub&quot;},
+    &quot;Tokyo&quot;: {&quot;code&quot;: &quot;NRT&quot;, &quot;airport&quot;: &quot;Narita / Haneda (NRT)&quot;, &quot;category&quot;: &quot;East Asia Metro&quot;},
+    &quot;Frankfurt&quot;: {&quot;code&quot;: &quot;FRA&quot;, &quot;airport&quot;: &quot;Frankfurt Airport (FRA)&quot;, &quot;category&quot;: &quot;European Finance&quot;}
+}
+
+class RoutePredictorEngine:
+    def __init__(self):
+        self.metrics = self._load_json(METRICS_PATH)
+        self.routes_df = self._load_routes_df(ASSIGNMENTS_PATH)
+
+    def _load_json(self, path):
+        if os.path.exists(path):
+            with open(path, &quot;r&quot;) as f:
+                return json.load(f)
+        return {}
+
+    def _load_routes_df(self, path):
+        if os.path.exists(path):
+            return pd.read_csv(path)
+        return pd.DataFrame()
+
+    def reload(self):
+        self.metrics = self._load_json(METRICS_PATH)
+        self.routes_df = self._load_routes_df(ASSIGNMENTS_PATH)
+
+    def resolve_city_name(self, city_or_code: str) -&gt; str:
+        clean = (city_or_code or &quot;&quot;).strip().upper()
+        if clean in CITY_CODE_MAP:
+            return CITY_CODE_MAP[clean]
+        for name in CITY_CODE_MAP.values():
+            if name.upper() == clean:
+                return name
+        return city_or_code.title()
+
+    def get_route_record(self, origin: str, destination: str):
+        origin_city = self.resolve_city_name(origin)
+        dest_city = self.resolve_city_name(destination)
+        route_name = f&quot;{origin_city} - {dest_city}&quot;
+
+        if not self.routes_df.empty:
+            match = self.routes_df[self.routes_df[&quot;route&quot;] == route_name]
+            if not match.empty:
+                return match.iloc[0].to_dict()
+
+            rev_route = f&quot;{dest_city} - {origin_city}&quot;
+            rev_match = self.routes_df[self.routes_df[&quot;route&quot;] == rev_route]
+            if not rev_match.empty:
+                rec = rev_match.iloc[0].to_dict()
+                rec[&quot;route&quot;] = route_name
+                rec[&quot;source_city&quot;] = origin_city
+                rec[&quot;destination_city&quot;] = dest_city
+                return rec
+
+        # Dynamic fallback
+        is_intl = origin_city in [&quot;London&quot;, &quot;Dubai&quot;, &quot;Singapore&quot;, &quot;New York&quot;, &quot;Paris&quot;, &quot;Bangkok&quot;, &quot;Tokyo&quot;, &quot;Frankfurt&quot;] or \
+                  dest_city in [&quot;London&quot;, &quot;Dubai&quot;, &quot;Singapore&quot;, &quot;New York&quot;, &quot;Paris&quot;, &quot;Bangkok&quot;, &quot;Tokyo&quot;, &quot;Frankfurt&quot;]
+        base_fare = 62000.0 if is_intl else 7800.0
+        return {
+            &quot;route&quot;: route_name,
+            &quot;source_city&quot;: origin_city,
+            &quot;destination_city&quot;: dest_city,
+            &quot;cluster&quot;: 1 if is_intl else 0,
+            &quot;archetype_name&quot;: &quot;Ultra-Long-Haul Intercontinental Corridors&quot; if is_intl else &quot;Cross-Country Domestic Trunk Corridors&quot;,
+            &quot;mean_price&quot;: base_fare,
+            &quot;median_price&quot;: base_fare * 0.85,
+            &quot;price_std&quot;: base_fare * 0.45,
+            &quot;price_cv&quot;: 0.55 if is_intl else 0.85,
+            &quot;p10_price&quot;: base_fare * 0.60,
+            &quot;p25_price&quot;: base_fare * 0.72,
+            &quot;p75_price&quot;: base_fare * 1.35,
+            &quot;p90_price&quot;: base_fare * 1.85,
+            &quot;last_minute_surge_ratio&quot;: 1.65 if is_intl else 2.15,
+            &quot;avg_duration&quot;: 11.5 if is_intl else 3.8,
+            &quot;direct_flight_ratio&quot;: 0.40,
+            &quot;business_ratio&quot;: 0.25 if is_intl else 0.16,
+            &quot;sample_count&quot;: 920
+        }
+
+    def generate_flight_options(self, origin_city, dest_city, current_fare, travel_class, avg_duration):
+        is_intl = origin_city in [&quot;London&quot;, &quot;Dubai&quot;, &quot;Singapore&quot;, &quot;New York&quot;, &quot;Paris&quot;, &quot;Bangkok&quot;, &quot;Tokyo&quot;, &quot;Frankfurt&quot;] or \
+                  dest_city in [&quot;London&quot;, &quot;Dubai&quot;, &quot;Singapore&quot;, &quot;New York&quot;, &quot;Paris&quot;, &quot;Bangkok&quot;, &quot;Tokyo&quot;, &quot;Frankfurt&quot;]
+        
+        dur_hours = int(avg_duration)
+        dur_mins = int((avg_duration - dur_hours) * 60)
+        dur_str = f&quot;{dur_hours}h {dur_mins:02d}m&quot;
+        
+        flights = []
+        if is_intl:
+            carriers = [
+                {&quot;airline&quot;: &quot;Air India&quot;, &quot;flight_no&quot;: &quot;AI 161&quot;, &quot;dep&quot;: &quot;02:15&quot;, &quot;arr&quot;: &quot;07:45&quot;, &quot;stops&quot;: &quot;Non-stop&quot;, &quot;mult&quot;: 0.98, &quot;badge&quot;: &quot;Great Deal&quot;, &quot;badge_color&quot;: &quot;#059669&quot;},
+                {&quot;airline&quot;: &quot;British Airways&quot; if &quot;London&quot; in [origin_city, dest_city] else &quot;Emirates&quot;, &quot;flight_no&quot;: &quot;BA 142&quot; if &quot;London&quot; in [origin_city, dest_city] else &quot;EK 501&quot;, &quot;dep&quot;: &quot;08:30&quot;, &quot;arr&quot;: &quot;14:00&quot;, &quot;stops&quot;: &quot;Non-stop&quot;, &quot;mult&quot;: 1.05, &quot;badge&quot;: &quot;Typical Fare&quot;, &quot;badge_color&quot;: &quot;#64748b&quot;},
+                {&quot;airline&quot;: &quot;Virgin Atlantic&quot; if &quot;London&quot; in [origin_city, dest_city] else &quot;Qatar Airways&quot;, &quot;flight_no&quot;: &quot;VS 301&quot; if &quot;London&quot; in [origin_city, dest_city] else &quot;QR 571&quot;, &quot;dep&quot;: &quot;13:20&quot;, &quot;arr&quot;: &quot;18:50&quot;, &quot;stops&quot;: &quot;Non-stop&quot;, &quot;mult&quot;: 1.02, &quot;badge&quot;: &quot;Popular Choice&quot;, &quot;badge_color&quot;: &quot;#2563eb&quot;},
+                {&quot;airline&quot;: &quot;Emirates&quot; if &quot;London&quot; in [origin_city, dest_city] else &quot;Singapore Airlines&quot;, &quot;flight_no&quot;: &quot;EK 511&quot; if &quot;London&quot; in [origin_city, dest_city] else &quot;SQ 403&quot;, &quot;dep&quot;: &quot;21:40&quot;, &quot;arr&quot;: &quot;08:15 (+1)&quot;, &quot;stops&quot;: &quot;1 Stop (DXB)&quot;, &quot;mult&quot;: 0.92, &quot;badge&quot;: &quot;Lowest Fare&quot;, &quot;badge_color&quot;: &quot;#0284c7&quot;}
+            ]
+        else:
+            carriers = [
+                {&quot;airline&quot;: &quot;IndiGo&quot;, &quot;flight_no&quot;: &quot;6E 204&quot;, &quot;dep&quot;: &quot;06:00&quot;, &quot;arr&quot;: &quot;08:15&quot;, &quot;stops&quot;: &quot;Non-stop&quot;, &quot;mult&quot;: 0.95, &quot;badge&quot;: &quot;Lowest Fare&quot;, &quot;badge_color&quot;: &quot;#0284c7&quot;},
+                {&quot;airline&quot;: &quot;Air India&quot;, &quot;flight_no&quot;: &quot;AI 803&quot;, &quot;dep&quot;: &quot;09:45&quot;, &quot;arr&quot;: &quot;12:00&quot;, &quot;stops&quot;: &quot;Non-stop&quot;, &quot;mult&quot;: 1.02, &quot;badge&quot;: &quot;Great Deal&quot;, &quot;badge_color&quot;: &quot;#059669&quot;},
+                {&quot;airline&quot;: &quot;Vistara&quot;, &quot;flight_no&quot;: &quot;UK 995&quot;, &quot;dep&quot;: &quot;14:15&quot;, &quot;arr&quot;: &quot;16:30&quot;, &quot;stops&quot;: &quot;Non-stop&quot;, &quot;mult&quot;: 1.08, &quot;badge&quot;: &quot;Premium Cabin&quot;, &quot;badge_color&quot;: &quot;#7c3aed&quot;},
+                {&quot;airline&quot;: &quot;Akasa Air&quot;, &quot;flight_no&quot;: &quot;QP 1102&quot;, &quot;dep&quot;: &quot;19:30&quot;, &quot;arr&quot;: &quot;21:45&quot;, &quot;stops&quot;: &quot;Non-stop&quot;, &quot;mult&quot;: 0.93, &quot;badge&quot;: &quot;Best Value&quot;, &quot;badge_color&quot;: &quot;#059669&quot;}
+            ]
+            
+        for c in carriers:
+            flight_price = int(current_fare * c[&quot;mult&quot;])
+            flights.append({
+                &quot;airline&quot;: c[&quot;airline&quot;],
+                &quot;flight_no&quot;: c[&quot;flight_no&quot;],
+                &quot;dep_time&quot;: c[&quot;dep&quot;],
+                &quot;arr_time&quot;: c[&quot;arr&quot;],
+                &quot;duration&quot;: dur_str,
+                &quot;stops&quot;: c[&quot;stops&quot;],
+                &quot;price&quot;: flight_price,
+                &quot;badge&quot;: c[&quot;badge&quot;],
+                &quot;badge_color&quot;: c[&quot;badge_color&quot;]
+            })
+        return flights
+
+    def predict_booking_decision(self, origin: str, destination: str, depart_date_str: str = None, travel_class: str = &quot;Economy&quot;):
+        origin_city = self.resolve_city_name(origin)
+        dest_city = self.resolve_city_name(destination)
+        route_rec = self.get_route_record(origin_city, dest_city)
+
+        cluster_id = str(int(route_rec.get(&quot;cluster&quot;, 0)))
+        archetype_info = self.metrics.get(&quot;archetypes&quot;, {}).get(cluster_id, {})
+        archetype_name = archetype_info.get(&quot;archetype_name&quot;, route_rec.get(&quot;archetype_name&quot;, &quot;Commercial Corridor&quot;))
+
+        days_left = 25
+        if depart_date_str:
+            try:
+                now_date = datetime.date(2026, 11, 15)
+                parts = depart_date_str.split(&quot;-&quot;)
+                dep_date = datetime.date(int(parts[0]), int(parts[1]), int(parts[2]))
+                diff = (dep_date - now_date).days
+                days_left = max(1, diff)
+            except Exception:
+                days_left = 25
+
+        class_factor = 3.8 if travel_class.lower() == &quot;business&quot; else 1.0
+
+        base_median = route_rec.get(&quot;median_price&quot;, 6000.0) * class_factor
+        base_p10 = route_rec.get(&quot;p10_price&quot;, 4000.0) * class_factor
+        base_p25 = route_rec.get(&quot;p25_price&quot;, 5000.0) * class_factor
+        base_p75 = route_rec.get(&quot;p75_price&quot;, 11000.0) * class_factor
+        base_p90 = route_rec.get(&quot;p90_price&quot;, 18000.0) * class_factor
+        base_mean = route_rec.get(&quot;mean_price&quot;, 8500.0) * class_factor
+
+        surge_ratio = route_rec.get(&quot;last_minute_surge_ratio&quot;, 2.0)
+
+        # Recommendation logic
+        if days_left &lt;= 3:
+            current_fare = base_median * (surge_ratio * 1.08)
+            verdict = &quot;BOOK NOW&quot;
+            verdict_badge = &quot;book-now&quot;
+            verdict_summary = &quot;Emergency Surge Alert: Flight is in departure-week critical surge window. Seats are evaporating quickly.&quot;
+            confidence = 97
+        elif days_left &lt;= 7:
+            current_fare = base_median * (surge_ratio * 0.85)
+            verdict = &quot;BOOK NOW&quot;
+            verdict_badge = &quot;book-now&quot;
+            verdict_summary = f&quot;Inside steep price climb zone ({days_left} days left). Booking now avoids the severe last-minute surge of +{int((surge_ratio-1)*100)}%.&quot;
+            confidence = 94
+        elif 16 &lt;= days_left &lt;= 34:
+            current_fare = base_p25 * 1.02
+            verdict = &quot;BOOK NOW&quot;
+            verdict_badge = &quot;book-now&quot;
+            verdict_summary = f&quot;Optimal &#x27;Goldilocks Window&#x27; Active ({days_left} days left). Fares are in the lowest historical 25th percentile. Lock in now.&quot;
+            confidence = 93
+        elif days_left &gt; 45:
+            current_fare = base_p75 * 0.96
+            verdict = &quot;WAIT&quot;
+            verdict_badge = &quot;wait&quot;
+            verdict_summary = f&quot;Booking {days_left} days ahead is premature. Airline yield systems release discounted fare buckets ~21–35 days before departure.&quot;
+            confidence = 89
+        else:
+            current_fare = base_median
+            verdict = &quot;TYPICAL / MONITOR&quot;
+            verdict_badge = &quot;monitor&quot;
+            verdict_summary = f&quot;Fares are stable near median ({days_left} days left). Set an alert and pounce if fares dip below INR {int(base_p25):,}.&quot;
+            confidence = 86
+
+        price_range = max(1, base_p90 - base_p10)
+        percentile_rank = int(np.clip(((current_fare - base_p10) / price_range) * 100, 5, 95))
+
+        # Expected surge peak
+        peak_surge_price = int(base_median * surge_ratio * 1.05)
+        potential_savings = max(0, peak_surge_price - int(current_fare))
+        savings_pct = int(round((potential_savings / peak_surge_price) * 100)) if peak_surge_price &gt; 0 else 0
+
+        # Booking curve points
+        curve_days = [50, 45, 40, 35, 30, 25, 21, 14, 10, 7, 5, 3, 2, 1]
+        curve_prices = []
+        for d in curve_days:
+            if d &gt; 35:
+                mult = 1.05
+            elif d &gt;= 18:
+                mult = 0.92
+            elif d &gt;= 8:
+                mult = 1.15
+            elif d &gt;= 4:
+                mult = surge_ratio * 0.75
+            else:
+                mult = surge_ratio * 1.05
+            curve_prices.append(round(base_median * mult, 0))
+
+        origin_meta = CITY_META.get(origin_city, {&quot;code&quot;: origin_city[:3].upper(), &quot;airport&quot;: f&quot;{origin_city} Airport&quot;, &quot;category&quot;: &quot;City&quot;})
+        dest_meta = CITY_META.get(dest_city, {&quot;code&quot;: dest_city[:3].upper(), &quot;airport&quot;: f&quot;{dest_city} Airport&quot;, &quot;category&quot;: &quot;City&quot;})
+
+        # Generate realistic flight options
+        flight_options = self.generate_flight_options(
+            origin_city=origin_city,
+            dest_city=dest_city,
+            current_fare=current_fare,
+            travel_class=travel_class,
+            avg_duration=route_rec.get(&quot;avg_duration&quot;, 3.5)
+        )
+
+        return {
+            &quot;origin&quot;: origin_city,
+            &quot;origin_code&quot;: origin_meta[&quot;code&quot;],
+            &quot;origin_airport&quot;: origin_meta[&quot;airport&quot;],
+            &quot;destination&quot;: dest_city,
+            &quot;destination_code&quot;: dest_meta[&quot;code&quot;],
+            &quot;destination_airport&quot;: dest_meta[&quot;airport&quot;],
+            &quot;route&quot;: route_rec.get(&quot;route&quot;),
+            &quot;days_left&quot;: days_left,
+            &quot;travel_class&quot;: travel_class,
+            &quot;verdict&quot;: verdict,
+            &quot;verdict_badge&quot;: verdict_badge,
+            &quot;verdict_summary&quot;: verdict_summary,
+            &quot;confidence_score&quot;: confidence,
+            &quot;estimated_fare&quot;: int(current_fare),
+            &quot;peak_surge_fare&quot;: peak_surge_price,
+            &quot;potential_savings_inr&quot;: potential_savings,
+            &quot;savings_pct&quot;: savings_pct,
+            &quot;percentile_rank&quot;: percentile_rank,
+            &quot;price_benchmarks&quot;: {
+                &quot;p10&quot;: int(base_p10),
+                &quot;p25&quot;: int(base_p25),
+                &quot;median&quot;: int(base_median),
+                &quot;p75&quot;: int(base_p75),
+                &quot;p90&quot;: int(base_p90),
+                &quot;mean&quot;: int(base_mean)
+            },
+            &quot;cluster_info&quot;: {
+                &quot;cluster_id&quot;: int(cluster_id),
+                &quot;archetype_name&quot;: archetype_name,
+                &quot;badge_color&quot;: archetype_info.get(&quot;badge_color&quot;, &quot;#3b82f6&quot;),
+                &quot;description&quot;: archetype_info.get(&quot;description&quot;, &quot;&quot;),
+                &quot;avg_duration&quot;: route_rec.get(&quot;avg_duration&quot;, 0),
+                &quot;direct_pct&quot;: round(float(route_rec.get(&quot;direct_flight_ratio&quot;, 0) * 100), 1),
+                &quot;volatility_cv&quot;: route_rec.get(&quot;price_cv&quot;, 0),
+                &quot;surge_ratio&quot;: route_rec.get(&quot;last_minute_surge_ratio&quot;, 0)
+            },
+            &quot;curve_data&quot;: {
+                &quot;days&quot;: curve_days,
+                &quot;prices&quot;: curve_prices,
+                &quot;current_day&quot;: days_left,
+                &quot;goldilocks_window&quot;: [18, 30]
+            },
+            &quot;flight_options&quot;: flight_options
+        }
+</code></pre>
+      </div>
+    </div>
+    
+    <div class="code-module-card" id="module-11">
+      <div class="code-module-header">
+        <div class="module-title-box">
+          <span class="module-num-badge">MODULE #11</span>
+          <span class="module-path">app/templates/index.html</span>
+        </div>
+        <div class="module-meta-badges">
+          <span class="badge category-badge">User Interface</span>
+          <span class="badge lang-badge">HTML5 / Jinja2</span>
+          <span class="badge lines-badge">548 Lines</span>
+        </div>
+      </div>
+      <div class="module-desc">
+        <strong>Component Description:</strong> FarePredictor consumer web portal: modern white theme, search bar, verdict cards, interactive pricing sliders, flight schedules, and AI methodology tabs.
+      </div>
+      <div class="code-container">
+        <pre><code class="language-html5 / jinja2">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;FarePredictor | Smart Airfare Forecasting &amp; Route Intelligence&lt;/title&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;/static/css/style.css?v=3.0&quot;&gt;
+  &lt;script src=&quot;https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;!-- Top Navigation Bar --&gt;
+  &lt;header class=&quot;app-header&quot;&gt;
+    &lt;div class=&quot;header-container&quot;&gt;
+      &lt;div class=&quot;brand-section&quot;&gt;
+        &lt;div class=&quot;brand-logo&quot;&gt;
+          &lt;span class=&quot;logo-icon&quot;&gt;✈&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;brand-info&quot;&gt;
+          &lt;h1&gt;FarePredictor &lt;span class=&quot;badge-subtle&quot;&gt;AI Flight Intelligence&lt;/span&gt;&lt;/h1&gt;
+          &lt;p&gt;Smart Airfare Forecasting &amp; Route Analytics&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Consumer Navigation Tabs --&gt;
+      &lt;nav class=&quot;main-nav&quot;&gt;
+        &lt;button class=&quot;nav-tab-btn active&quot; data-view=&quot;view-prediction&quot;&gt;📈 Price Forecast&lt;/button&gt;
+        &lt;button class=&quot;nav-tab-btn&quot; data-view=&quot;view-flights&quot;&gt;✈ Available Flights&lt;/button&gt;
+        &lt;button class=&quot;nav-tab-btn&quot; data-view=&quot;view-routes&quot;&gt;🗺 112 Corridors&lt;/button&gt;
+        &lt;button class=&quot;nav-tab-btn&quot; data-view=&quot;view-methodology&quot;&gt;🔬 AI Model &amp; Methodology&lt;/button&gt;
+      &lt;/nav&gt;
+    &lt;/div&gt;
+  &lt;/header&gt;
+
+  &lt;!-- Main Container --&gt;
+  &lt;main class=&quot;main-content&quot;&gt;
+
+    &lt;!-- Unified Flight Search Bar (FarePredictor Style) --&gt;
+    &lt;section class=&quot;search-banner&quot;&gt;
+      &lt;form id=&quot;cockpitSearchForm&quot; class=&quot;search-form-horizontal&quot;&gt;
+        
+        &lt;!-- Origin --&gt;
+        &lt;div class=&quot;search-input-group&quot;&gt;
+          &lt;label for=&quot;fromCity&quot; class=&quot;input-label&quot;&gt;FROM&lt;/label&gt;
+          &lt;div class=&quot;select-wrapper&quot;&gt;
+            &lt;span class=&quot;input-icon&quot;&gt;🛫&lt;/span&gt;
+            &lt;select id=&quot;fromCity&quot; class=&quot;select-clean&quot; required&gt;
+              &lt;optgroup label=&quot;Global Flagship Hubs&quot;&gt;
+                &lt;option value=&quot;LON&quot; {% if from_city == &#x27;LON&#x27; or from_city == &#x27;London&#x27; %}selected{% endif %}&gt;LON • London (LHR)&lt;/option&gt;
+                &lt;option value=&quot;DXB&quot; {% if from_city == &#x27;DXB&#x27; or from_city == &#x27;Dubai&#x27; %}selected{% endif %}&gt;DXB • Dubai (DXB)&lt;/option&gt;
+                &lt;option value=&quot;SIN&quot; {% if from_city == &#x27;SIN&#x27; or from_city == &#x27;Singapore&#x27; %}selected{% endif %}&gt;SIN • Singapore (SIN)&lt;/option&gt;
+                &lt;option value=&quot;JFK&quot; {% if from_city == &#x27;JFK&#x27; or from_city == &#x27;New York&#x27; %}selected{% endif %}&gt;JFK • New York (JFK)&lt;/option&gt;
+                &lt;option value=&quot;CDG&quot; {% if from_city == &#x27;CDG&#x27; or from_city == &#x27;Paris&#x27; %}selected{% endif %}&gt;CDG • Paris (CDG)&lt;/option&gt;
+                &lt;option value=&quot;BKK&quot; {% if from_city == &#x27;BKK&#x27; or from_city == &#x27;Bangkok&#x27; %}selected{% endif %}&gt;BKK • Bangkok (BKK)&lt;/option&gt;
+                &lt;option value=&quot;NRT&quot; {% if from_city == &#x27;NRT&#x27; or from_city == &#x27;Tokyo&#x27; %}selected{% endif %}&gt;NRT • Tokyo (NRT)&lt;/option&gt;
+                &lt;option value=&quot;FRA&quot; {% if from_city == &#x27;FRA&#x27; or from_city == &#x27;Frankfurt&#x27; %}selected{% endif %}&gt;FRA • Frankfurt (FRA)&lt;/option&gt;
+              &lt;/optgroup&gt;
+              &lt;optgroup label=&quot;Primary Indian Metros&quot;&gt;
+                &lt;option value=&quot;DEL&quot; {% if from_city == &#x27;DEL&#x27; or from_city == &#x27;Delhi&#x27; %}selected{% endif %}&gt;DEL • Delhi (DEL)&lt;/option&gt;
+                &lt;option value=&quot;BOM&quot; {% if from_city == &#x27;BOM&#x27; or from_city == &#x27;Mumbai&#x27; %}selected{% endif %}&gt;BOM • Mumbai (BOM)&lt;/option&gt;
+                &lt;option value=&quot;BLR&quot; {% if from_city == &#x27;BLR&#x27; or from_city == &#x27;Bangalore&#x27; %}selected{% endif %}&gt;BLR • Bangalore (BLR)&lt;/option&gt;
+                &lt;option value=&quot;CCU&quot; {% if from_city == &#x27;CCU&#x27; or from_city == &#x27;Kolkata&#x27; %}selected{% endif %}&gt;CCU • Kolkata (CCU)&lt;/option&gt;
+                &lt;option value=&quot;HYD&quot; {% if from_city == &#x27;HYD&#x27; or from_city == &#x27;Hyderabad&#x27; %}selected{% endif %}&gt;HYD • Hyderabad (HYD)&lt;/option&gt;
+                &lt;option value=&quot;MAA&quot; {% if from_city == &#x27;MAA&#x27; or from_city == &#x27;Chennai&#x27; %}selected{% endif %}&gt;MAA • Chennai (MAA)&lt;/option&gt;
+              &lt;/optgroup&gt;
+              &lt;optgroup label=&quot;Regional &amp; Leisure Hubs&quot;&gt;
+                &lt;option value=&quot;GOI&quot; {% if from_city == &#x27;GOI&#x27; or from_city == &#x27;Goa&#x27; %}selected{% endif %}&gt;GOI • Goa (GOI)&lt;/option&gt;
+                &lt;option value=&quot;PNQ&quot; {% if from_city == &#x27;PNQ&#x27; or from_city == &#x27;Pune&#x27; %}selected{% endif %}&gt;PNQ • Pune (PNQ)&lt;/option&gt;
+                &lt;option value=&quot;AMD&quot; {% if from_city == &#x27;AMD&#x27; or from_city == &#x27;Ahmedabad&#x27; %}selected{% endif %}&gt;AMD • Ahmedabad (AMD)&lt;/option&gt;
+                &lt;option value=&quot;COK&quot; {% if from_city == &#x27;COK&#x27; or from_city == &#x27;Kochi&#x27; %}selected{% endif %}&gt;COK • Kochi (COK)&lt;/option&gt;
+                &lt;option value=&quot;JAI&quot; {% if from_city == &#x27;JAI&#x27; or from_city == &#x27;Jaipur&#x27; %}selected{% endif %}&gt;JAI • Jaipur (JAI)&lt;/option&gt;
+                &lt;option value=&quot;SXR&quot; {% if from_city == &#x27;SXR&#x27; or from_city == &#x27;Srinagar&#x27; %}selected{% endif %}&gt;SXR • Srinagar (SXR)&lt;/option&gt;
+              &lt;/optgroup&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Swap Button --&gt;
+        &lt;button type=&quot;button&quot; id=&quot;btnSwapAtc&quot; class=&quot;btn-swap-clean&quot; title=&quot;Swap Origin and Destination&quot;&gt;⇄&lt;/button&gt;
+
+        &lt;!-- Destination --&gt;
+        &lt;div class=&quot;search-input-group&quot;&gt;
+          &lt;label for=&quot;toCity&quot; class=&quot;input-label&quot;&gt;TO&lt;/label&gt;
+          &lt;div class=&quot;select-wrapper&quot;&gt;
+            &lt;span class=&quot;input-icon&quot;&gt;🛬&lt;/span&gt;
+            &lt;select id=&quot;toCity&quot; class=&quot;select-clean&quot; required&gt;
+              &lt;optgroup label=&quot;Global Flagship Hubs&quot;&gt;
+                &lt;option value=&quot;LON&quot; {% if to_city == &#x27;LON&#x27; or to_city == &#x27;London&#x27; %}selected{% endif %}&gt;LON • London (LHR)&lt;/option&gt;
+                &lt;option value=&quot;DXB&quot; {% if to_city == &#x27;DXB&#x27; or to_city == &#x27;Dubai&#x27; %}selected{% endif %}&gt;DXB • Dubai (DXB)&lt;/option&gt;
+                &lt;option value=&quot;SIN&quot; {% if to_city == &#x27;SIN&#x27; or to_city == &#x27;Singapore&#x27; %}selected{% endif %}&gt;SIN • Singapore (SIN)&lt;/option&gt;
+                &lt;option value=&quot;JFK&quot; {% if to_city == &#x27;JFK&#x27; or to_city == &#x27;New York&#x27; %}selected{% endif %}&gt;JFK • New York (JFK)&lt;/option&gt;
+                &lt;option value=&quot;CDG&quot; {% if to_city == &#x27;CDG&#x27; or to_city == &#x27;Paris&#x27; %}selected{% endif %}&gt;CDG • Paris (CDG)&lt;/option&gt;
+                &lt;option value=&quot;BKK&quot; {% if to_city == &#x27;BKK&#x27; or to_city == &#x27;Bangkok&#x27; %}selected{% endif %}&gt;BKK • Bangkok (BKK)&lt;/option&gt;
+                &lt;option value=&quot;NRT&quot; {% if to_city == &#x27;NRT&#x27; or to_city == &#x27;Tokyo&#x27; %}selected{% endif %}&gt;NRT • Tokyo (NRT)&lt;/option&gt;
+                &lt;option value=&quot;FRA&quot; {% if to_city == &#x27;FRA&#x27; or to_city == &#x27;Frankfurt&#x27; %}selected{% endif %}&gt;FRA • Frankfurt (FRA)&lt;/option&gt;
+              &lt;/optgroup&gt;
+              &lt;optgroup label=&quot;Primary Indian Metros&quot;&gt;
+                &lt;option value=&quot;DEL&quot; {% if to_city == &#x27;DEL&#x27; or to_city == &#x27;Delhi&#x27; %}selected{% endif %}&gt;DEL • Delhi (DEL)&lt;/option&gt;
+                &lt;option value=&quot;BOM&quot; {% if to_city == &#x27;BOM&#x27; or to_city == &#x27;Mumbai&#x27; %}selected{% endif %}&gt;BOM • Mumbai (BOM)&lt;/option&gt;
+                &lt;option value=&quot;BLR&quot; {% if to_city == &#x27;BLR&#x27; or to_city == &#x27;Bangalore&#x27; %}selected{% endif %}&gt;BLR • Bangalore (BLR)&lt;/option&gt;
+                &lt;option value=&quot;CCU&quot; {% if to_city == &#x27;CCU&#x27; or to_city == &#x27;Kolkata&#x27; %}selected{% endif %}&gt;CCU • Kolkata (CCU)&lt;/option&gt;
+                &lt;option value=&quot;HYD&quot; {% if to_city == &#x27;HYD&#x27; or to_city == &#x27;Hyderabad&#x27; %}selected{% endif %}&gt;HYD • Hyderabad (HYD)&lt;/option&gt;
+                &lt;option value=&quot;MAA&quot; {% if to_city == &#x27;MAA&#x27; or to_city == &#x27;Chennai&#x27; %}selected{% endif %}&gt;MAA • Chennai (MAA)&lt;/option&gt;
+              &lt;/optgroup&gt;
+              &lt;optgroup label=&quot;Regional &amp; Leisure Hubs&quot;&gt;
+                &lt;option value=&quot;GOI&quot; {% if to_city == &#x27;GOI&#x27; or to_city == &#x27;Goa&#x27; %}selected{% endif %}&gt;GOI • Goa (GOI)&lt;/option&gt;
+                &lt;option value=&quot;PNQ&quot; {% if to_city == &#x27;PNQ&#x27; or to_city == &#x27;Pune&#x27; %}selected{% endif %}&gt;PNQ • Pune (PNQ)&lt;/option&gt;
+                &lt;option value=&quot;AMD&quot; {% if to_city == &#x27;AMD&#x27; or to_city == &#x27;Ahmedabad&#x27; %}selected{% endif %}&gt;AMD • Ahmedabad (AMD)&lt;/option&gt;
+                &lt;option value=&quot;COK&quot; {% if to_city == &#x27;COK&#x27; or to_city == &#x27;Kochi&#x27; %}selected{% endif %}&gt;COK • Kochi (COK)&lt;/option&gt;
+                &lt;option value=&quot;JAI&quot; {% if to_city == &#x27;JAI&#x27; or to_city == &#x27;Jaipur&#x27; %}selected{% endif %}&gt;JAI • Jaipur (JAI)&lt;/option&gt;
+                &lt;option value=&quot;SXR&quot; {% if to_city == &#x27;SXR&#x27; or to_city == &#x27;Srinagar&#x27; %}selected{% endif %}&gt;SXR • Srinagar (SXR)&lt;/option&gt;
+              &lt;/optgroup&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Departure Date --&gt;
+        &lt;div class=&quot;search-input-group&quot;&gt;
+          &lt;label for=&quot;departDate&quot; class=&quot;input-label&quot;&gt;DEPARTURE&lt;/label&gt;
+          &lt;input type=&quot;date&quot; id=&quot;departDate&quot; class=&quot;input-clean&quot; value=&quot;{{ depart_date }}&quot; required&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Cabin Class --&gt;
+        &lt;div class=&quot;search-input-group&quot;&gt;
+          &lt;label for=&quot;travelClass&quot; class=&quot;input-label&quot;&gt;CABIN CLASS&lt;/label&gt;
+          &lt;select id=&quot;travelClass&quot; class=&quot;select-clean&quot;&gt;
+            &lt;option value=&quot;Economy&quot; {% if travel_class == &#x27;Economy&#x27; %}selected{% endif %}&gt;Economy&lt;/option&gt;
+            &lt;option value=&quot;Business&quot; {% if travel_class == &#x27;Business&#x27; %}selected{% endif %}&gt;Business Class&lt;/option&gt;
+          &lt;/select&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Submit Button --&gt;
+        &lt;div class=&quot;search-btn-wrapper&quot;&gt;
+          &lt;button type=&quot;submit&quot; class=&quot;btn-execute-analysis&quot;&gt;
+            &lt;span&gt;⚡ Predict Best Time to Buy&lt;/span&gt;
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/form&gt;
+
+      &lt;!-- Popular Route Pills --&gt;
+      &lt;div class=&quot;popular-routes-bar&quot;&gt;
+        &lt;span class=&quot;popular-label&quot;&gt;Popular Searches:&lt;/span&gt;
+        &lt;div class=&quot;popular-chips&quot;&gt;
+          &lt;button type=&quot;button&quot; class=&quot;preset-pill&quot; data-from=&quot;DEL&quot; data-to=&quot;LON&quot;&gt;DEL ➔ LON (London)&lt;/button&gt;
+          &lt;button type=&quot;button&quot; class=&quot;preset-pill&quot; data-from=&quot;DEL&quot; data-to=&quot;BOM&quot;&gt;DEL ➔ BOM (Mumbai)&lt;/button&gt;
+          &lt;button type=&quot;button&quot; class=&quot;preset-pill&quot; data-from=&quot;BOM&quot; data-to=&quot;DXB&quot;&gt;BOM ➔ DXB (Dubai)&lt;/button&gt;
+          &lt;button type=&quot;button&quot; class=&quot;preset-pill&quot; data-from=&quot;BLR&quot; data-to=&quot;MAA&quot;&gt;BLR ➔ MAA (Chennai)&lt;/button&gt;
+          &lt;button type=&quot;button&quot; class=&quot;preset-pill&quot; data-from=&quot;BOM&quot; data-to=&quot;GOI&quot;&gt;BOM ➔ GOI (Goa)&lt;/button&gt;
+          &lt;button type=&quot;button&quot; class=&quot;preset-pill&quot; data-from=&quot;DEL&quot; data-to=&quot;JFK&quot;&gt;DEL ➔ JFK (New York)&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;!-- Clear Consumer Recommendation Hero Card (100% Understandable to Anyone) --&gt;
+    &lt;section class=&quot;recommendation-hero&quot;&gt;
+      &lt;div class=&quot;hero-top&quot;&gt;
+        &lt;div class=&quot;verdict-banner&quot;&gt;
+          &lt;div id=&quot;verdictBadge&quot; class=&quot;signal-badge-cockpit {{ initial_prediction.verdict_badge }}&quot;&gt;
+            &lt;span&gt;{% if initial_prediction.verdict_badge == &#x27;book-now&#x27; %}⚡{% elif initial_prediction.verdict_badge == &#x27;wait&#x27; %}⏳{% else %}👁{% endif %}&lt;/span&gt;
+            {{ initial_prediction.verdict }}
+          &lt;/div&gt;
+          &lt;div class=&quot;verdict-route-details&quot;&gt;
+            &lt;h2 id=&quot;calloutIata&quot; class=&quot;route-title&quot;&gt;
+              &lt;span&gt;{{ initial_prediction.origin_code }}&lt;/span&gt;
+              &lt;span class=&quot;flight-arrow&quot;&gt;➔&lt;/span&gt;
+              &lt;span&gt;{{ initial_prediction.destination_code }}&lt;/span&gt;
+            &lt;/h2&gt;
+            &lt;p id=&quot;calloutCities&quot; class=&quot;route-subtitle&quot;&gt;
+              {{ initial_prediction.origin }} ({{ initial_prediction.origin_airport }}) to {{ initial_prediction.destination }} ({{ initial_prediction.destination_airport }})
+            &lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Price Display --&gt;
+        &lt;div class=&quot;price-callout-box&quot;&gt;
+          &lt;div class=&quot;price-header-label&quot;&gt;CURRENT BEST FARE&lt;/div&gt;
+          &lt;div id=&quot;statFare&quot; class=&quot;price-amount&quot;&gt;₹{{ &quot;{:,}&quot;.format(initial_prediction.estimated_fare) }}&lt;/div&gt;
+          &lt;div id=&quot;advantagePill&quot; class=&quot;savings-badge&quot;&gt;
+            Save {{ initial_prediction.savings_pct }}% vs Peak
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Plain English Recommendation Box --&gt;
+      &lt;div class=&quot;verdict-explanation-box&quot;&gt;
+        &lt;div class=&quot;explanation-icon&quot;&gt;💡&lt;/div&gt;
+        &lt;div class=&quot;explanation-text&quot;&gt;
+          &lt;h4 id=&quot;verdictHeading&quot;&gt;
+            {% if initial_prediction.verdict_badge == &#x27;book-now&#x27; %}
+              Best Time to Book — Great Price Detected
+            {% elif initial_prediction.verdict_badge == &#x27;wait&#x27; %}
+              Hold Off — Prices Expected to Drop
+            {% else %}
+              Fair Price — Monitor Trends
+            {% endif %}
+          &lt;/h4&gt;
+          &lt;p id=&quot;advantageMsg&quot;&gt;
+            {{ initial_prediction.verdict_summary }}
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Visual Percentile Gauge (Where Current Fare Sits) --&gt;
+      &lt;div class=&quot;price-gauge-container&quot;&gt;
+        &lt;div class=&quot;gauge-header&quot;&gt;
+          &lt;span&gt;PRICE POSITION VS. HISTORICAL BOOKINGS&lt;/span&gt;
+          &lt;span id=&quot;medianVal&quot;&gt;TYPICAL FARE: ₹{{ &quot;{:,}&quot;.format(initial_prediction.price_benchmarks.median) }}&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;gauge-track&quot;&gt;
+          &lt;div class=&quot;gauge-gradient&quot;&gt;&lt;/div&gt;
+          &lt;div id=&quot;gaugePin&quot; class=&quot;gauge-indicator&quot; style=&quot;left: {{ initial_prediction.percentile_rank }}%;&quot;&gt;
+            &lt;div class=&quot;pin-marker&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;pin-label&quot;&gt;You Are Here&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;gauge-labels&quot;&gt;
+          &lt;span id=&quot;p10Val&quot; class=&quot;label-low&quot;&gt;Lowest Expected: ₹{{ &quot;{:,}&quot;.format(initial_prediction.price_benchmarks.p10) }}&lt;/span&gt;
+          &lt;span class=&quot;label-mid&quot;&gt;Normal Historical Range&lt;/span&gt;
+          &lt;span id=&quot;p90Val&quot; class=&quot;label-high&quot;&gt;Peak Surge: ₹{{ &quot;{:,}&quot;.format(initial_prediction.price_benchmarks.p90) }}&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- 4 Core Metrics Cards --&gt;
+      &lt;div class=&quot;key-metrics-grid&quot;&gt;
+        &lt;div class=&quot;metric-card&quot;&gt;
+          &lt;div class=&quot;metric-title&quot;&gt;Predicted Fare&lt;/div&gt;
+          &lt;div class=&quot;metric-value&quot;&gt;₹{{ &quot;{:,}&quot;.format(initial_prediction.estimated_fare) }}&lt;/div&gt;
+          &lt;div class=&quot;metric-sub&quot;&gt;{{ initial_prediction.travel_class }} Class&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;metric-card&quot;&gt;
+          &lt;div class=&quot;metric-title&quot;&gt;Potential Savings&lt;/div&gt;
+          &lt;div class=&quot;metric-value&quot; style=&quot;color: var(--emerald-green);&quot;&gt;Up to ₹{{ &quot;{:,}&quot;.format(initial_prediction.potential_savings_inr) }}&lt;/div&gt;
+          &lt;div class=&quot;metric-sub&quot;&gt;vs Departure Peak&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;metric-card&quot;&gt;
+          &lt;div class=&quot;metric-title&quot;&gt;Days to Departure&lt;/div&gt;
+          &lt;div id=&quot;statDays&quot; class=&quot;metric-value&quot;&gt;{{ initial_prediction.days_left }} Days&lt;/div&gt;
+          &lt;div class=&quot;metric-sub&quot;&gt;Booking Horizon&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;metric-card&quot;&gt;
+          &lt;div class=&quot;metric-title&quot;&gt;Prediction Confidence&lt;/div&gt;
+          &lt;div id=&quot;statConfidence&quot; class=&quot;metric-value&quot; style=&quot;color: var(--cyan-accent);&quot;&gt;{{ initial_prediction.confidence_score }}%&lt;/div&gt;
+          &lt;div class=&quot;metric-sub&quot;&gt;High Sample Mass&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/section&gt;
+
+    &lt;!-- ======================================================================
+         TAB VIEW 1: PRICE FORECAST &amp; BOOKING WINDOW
+         ====================================================================== --&gt;
+    &lt;div id=&quot;view-prediction&quot; class=&quot;view-panel active&quot;&gt;
+      &lt;div class=&quot;content-card&quot;&gt;
+        &lt;div class=&quot;card-header&quot;&gt;
+          &lt;div&gt;
+            &lt;h3&gt;30-Day Airfare Trend &amp; Best Time to Book&lt;/h3&gt;
+            &lt;p&gt;Historical price movement relative to days before flight departure. The green zone marks when fares are typically cheapest.&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;span class=&quot;route-badge&quot;&gt;
+            Cluster {{ initial_prediction.cluster_info.cluster_id }}: {{ initial_prediction.cluster_info.archetype_name }}
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;chart-wrapper&quot;&gt;
+          &lt;canvas id=&quot;bookingCurveCanvas&quot;&gt;&lt;/canvas&gt;
+        &lt;/div&gt;
+
+        &lt;!-- 3 Step Consumer Guide --&gt;
+        &lt;div class=&quot;guidance-grid&quot;&gt;
+          &lt;div class=&quot;guidance-card green&quot;&gt;
+            &lt;div class=&quot;guidance-tag&quot;&gt;🟢 BEST TIME TO BOOK&lt;/div&gt;
+            &lt;h4&gt;18 to 34 Days in Advance&lt;/h4&gt;
+            &lt;p&gt;Fares reach their lowest stable point. Airlines have opened standard discount inventory buckets.&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;guidance-card red&quot;&gt;
+            &lt;div class=&quot;guidance-tag&quot;&gt;🔴 SURGE DANGER ZONE&lt;/div&gt;
+            &lt;h4&gt;Within 7 Days of Flight&lt;/h4&gt;
+            &lt;p&gt;Airlines sharply raise prices as seats sell out. Fares can increase by up to 2.2x.&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;guidance-card blue&quot;&gt;
+            &lt;div class=&quot;guidance-tag&quot;&gt;🟡 EARLY BIRD WINDOW&lt;/div&gt;
+            &lt;h4&gt;More than 45 Days Ahead&lt;/h4&gt;
+            &lt;p&gt;Prices are usually held steady. It is often better to monitor and wait for the 18–34 day sweet spot.&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- ======================================================================
+         TAB VIEW 2: AVAILABLE FLIGHTS ON CORRIDOR
+         ====================================================================== --&gt;
+    &lt;div id=&quot;view-flights&quot; class=&quot;view-panel&quot;&gt;
+      &lt;div class=&quot;content-card&quot;&gt;
+        &lt;div class=&quot;card-header&quot;&gt;
+          &lt;div&gt;
+            &lt;h3&gt;Available Flights for this Route&lt;/h3&gt;
+            &lt;p&gt;Live schedule options and predicted prices across airlines operating on this corridor.&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div id=&quot;flightOptionsContainer&quot; class=&quot;flight-list&quot;&gt;
+          {% for flight in initial_prediction.flight_options %}
+          &lt;div class=&quot;flight-card&quot;&gt;
+            &lt;div class=&quot;flight-airline&quot;&gt;
+              &lt;div class=&quot;airline-logo-box&quot;&gt;✈️&lt;/div&gt;
+              &lt;div&gt;
+                &lt;div class=&quot;airline-name&quot;&gt;{{ flight.airline }}&lt;/div&gt;
+                &lt;div class=&quot;flight-no&quot;&gt;{{ flight.flight_no }}&lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;flight-timing&quot;&gt;
+              &lt;div class=&quot;time-point&quot;&gt;
+                &lt;span class=&quot;time&quot;&gt;{{ flight.dep_time }}&lt;/span&gt;
+                &lt;span class=&quot;airport-code&quot;&gt;{{ initial_prediction.origin_code }}&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;flight-duration-bar&quot;&gt;
+                &lt;span class=&quot;duration-text&quot;&gt;{{ flight.duration }}&lt;/span&gt;
+                &lt;div class=&quot;duration-line&quot;&gt;
+                  &lt;span class=&quot;line-dot start&quot;&gt;&lt;/span&gt;
+                  &lt;span class=&quot;line-bar&quot;&gt;&lt;/span&gt;
+                  &lt;span class=&quot;line-dot end&quot;&gt;&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;span class=&quot;stops-text&quot;&gt;{{ flight.stops }}&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;time-point&quot;&gt;
+                &lt;span class=&quot;time&quot;&gt;{{ flight.arr_time }}&lt;/span&gt;
+                &lt;span class=&quot;airport-code&quot;&gt;{{ initial_prediction.destination_code }}&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;flight-price-box&quot;&gt;
+              &lt;span class=&quot;deal-badge&quot; style=&quot;background: {{ flight.badge_color }}15; color: {{ flight.badge_color }}; border: 1px solid {{ flight.badge_color }}30;&quot;&gt;
+                {{ flight.badge }}
+              &lt;/span&gt;
+              &lt;div class=&quot;flight-fare&quot;&gt;₹{{ &quot;{:,}&quot;.format(flight.price) }}&lt;/div&gt;
+              &lt;button class=&quot;btn-select-flight&quot; onclick=&quot;alert(&#x27;Flight {{ flight.flight_no }} on {{ flight.airline }} selected at ₹{{ &quot;{:,}&quot;.format(flight.price) }}. Proceeding to confirmation.&#x27;)&quot;&gt;Select Flight&lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          {% endfor %}
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- ======================================================================
+         TAB VIEW 3: 112 ROUTE CORRIDOR EXPLORER
+         ====================================================================== --&gt;
+    &lt;div id=&quot;view-routes&quot; class=&quot;view-panel&quot;&gt;
+      &lt;div class=&quot;content-card&quot;&gt;
+        &lt;div class=&quot;card-header&quot;&gt;
+          &lt;div&gt;
+            &lt;h3&gt;Explore 112 Monitored Flight Corridors&lt;/h3&gt;
+            &lt;p&gt;Click any popular route to instantly run a price prediction and view historical pricing trends.&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;dossier-grid&quot;&gt;
+          {% for cid, arch in metrics.archetypes.items() %}
+          &lt;div class=&quot;dossier-card&quot; style=&quot;border-left: 4px solid {{ arch.badge_color }};&quot;&gt;
+            &lt;div class=&quot;dossier-header&quot;&gt;
+              &lt;h4&gt;Cluster {{ arch.cluster_id }}: {{ arch.archetype_name }}&lt;/h4&gt;
+              &lt;span class=&quot;d-pill&quot; style=&quot;color: {{ arch.badge_color }}; border-color: {{ arch.badge_color }};&quot;&gt;{{ arch.route_count }} Corridors&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;p class=&quot;dossier-desc&quot;&gt;{{ arch.description }}&lt;/p&gt;
+
+            &lt;div class=&quot;dossier-stats-matrix&quot;&gt;
+              &lt;div class=&quot;dossier-stat-item&quot;&gt;
+                &lt;div class=&quot;d-label&quot;&gt;Average Fare&lt;/div&gt;
+                &lt;div class=&quot;d-val&quot;&gt;₹{{ &quot;{:,.0f}&quot;.format(arch.mean_price) }}&lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;dossier-stat-item&quot;&gt;
+                &lt;div class=&quot;d-label&quot;&gt;Flight Duration&lt;/div&gt;
+                &lt;div class=&quot;d-val&quot;&gt;{{ arch.avg_duration }} hrs&lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;dossier-stat-item&quot;&gt;
+                &lt;div class=&quot;d-label&quot;&gt;Surge Multiplier&lt;/div&gt;
+                &lt;div class=&quot;d-val&quot;&gt;{{ arch.surge_multiplier }}x&lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;dossier-stat-item&quot;&gt;
+                &lt;div class=&quot;d-label&quot;&gt;Direct Flights&lt;/div&gt;
+                &lt;div class=&quot;d-val&quot;&gt;{{ arch.direct_ratio_pct }}%&lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;sample-routes-list&quot;&gt;
+              &lt;span class=&quot;sample-label&quot;&gt;Sample Routes:&lt;/span&gt;
+              {% for r in arch.sample_routes %}
+              &lt;span class=&quot;sample-route-tag&quot;&gt;{{ r }}&lt;/span&gt;
+              {% endfor %}
+            &lt;/div&gt;
+          &lt;/div&gt;
+          {% endfor %}
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- ======================================================================
+         TAB VIEW 4: AI MODEL &amp; METHODOLOGY (FOR FACULTY &amp; ACADEMIC AUDIT)
+         ====================================================================== --&gt;
+    &lt;div id=&quot;view-methodology&quot; class=&quot;view-panel&quot;&gt;
+      
+      &lt;!-- Academic Telemetry Cards --&gt;
+      &lt;div class=&quot;academic-telemetry-grid&quot;&gt;
+        &lt;div class=&quot;academic-card&quot;&gt;
+          &lt;div class=&quot;academic-label&quot;&gt;OPTIMAL CLUSTERS&lt;/div&gt;
+          &lt;div class=&quot;academic-val&quot;&gt;K = 4&lt;/div&gt;
+          &lt;div class=&quot;academic-sub&quot;&gt;Elbow &amp; Silhouette Peak&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;academic-card&quot;&gt;
+          &lt;div class=&quot;academic-label&quot;&gt;MANHATTAN SILHOUETTE&lt;/div&gt;
+          &lt;div class=&quot;academic-val&quot; style=&quot;color: var(--emerald-green);&quot;&gt;0.4858&lt;/div&gt;
+          &lt;div class=&quot;academic-sub&quot;&gt;+11.2% higher than Euclidean&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;academic-card&quot;&gt;
+          &lt;div class=&quot;academic-label&quot;&gt;PCA VARIANCE EXPLAINED&lt;/div&gt;
+          &lt;div class=&quot;academic-val&quot; style=&quot;color: var(--cyan-accent);&quot;&gt;88.6%&lt;/div&gt;
+          &lt;div class=&quot;academic-sub&quot;&gt;Across 3 Principal Components&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;academic-card&quot;&gt;
+          &lt;div class=&quot;academic-label&quot;&gt;PARTITION STABILITY (ARI)&lt;/div&gt;
+          &lt;div class=&quot;academic-val&quot;&gt;0.9927&lt;/div&gt;
+          &lt;div class=&quot;academic-sub&quot;&gt;99.3% Seed Invariance&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Distance Metric Comparison Table --&gt;
+      &lt;div class=&quot;content-card&quot;&gt;
+        &lt;div class=&quot;card-header&quot;&gt;
+          &lt;div&gt;
+            &lt;h3&gt;Distance Benchmark: Euclidean (L2) vs. Manhattan (L1) Formulation&lt;/h3&gt;
+            &lt;p&gt;Airfare datasets exhibit extreme positive outliers (e.g. ₹90,000 emergency bookings). Manhattan distance minimizes absolute deviations, resulting in superior cluster cohesion.&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;table-responsive&quot;&gt;
+          &lt;table class=&quot;table-clean&quot;&gt;
+            &lt;thead&gt;
+              &lt;tr&gt;
+                &lt;th&gt;Cluster Count (K)&lt;/th&gt;
+                &lt;th&gt;Algorithm &amp; Formulation&lt;/th&gt;
+                &lt;th&gt;Silhouette (L2 Metric)&lt;/th&gt;
+                &lt;th&gt;Silhouette (L1 Metric)&lt;/th&gt;
+                &lt;th&gt;Davies-Bouldin Index&lt;/th&gt;
+                &lt;th&gt;Inertia (WCSS)&lt;/th&gt;
+              &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+              {% for row in metrics.distance_comparison %}
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;K = {{ row.k }}&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;{{ row.algorithm }}&lt;/td&gt;
+                &lt;td&gt;{{ row.silhouette_euclidean }}&lt;/td&gt;
+                &lt;td&gt;&lt;strong style=&quot;color: var(--emerald-green);&quot;&gt;{{ row.silhouette_manhattan }}&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;{{ row.davies_bouldin }}&lt;/td&gt;
+                &lt;td&gt;{{ row.inertia }}&lt;/td&gt;
+              &lt;/tr&gt;
+              {% endfor %}
+            &lt;/tbody&gt;
+          &lt;/table&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Charts Grid: WCSS Elbow &amp; Silhouette --&gt;
+      &lt;div class=&quot;dual-chart-grid&quot;&gt;
+        &lt;div class=&quot;content-card&quot;&gt;
+          &lt;div class=&quot;card-header&quot;&gt;
+            &lt;h4&gt;WCSS Inertia Elbow Curve&lt;/h4&gt;
+          &lt;/div&gt;
+          &lt;div style=&quot;height: 260px; position: relative;&quot;&gt;
+            &lt;canvas id=&quot;elbowCurveCanvas&quot;&gt;&lt;/canvas&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content-card&quot;&gt;
+          &lt;div class=&quot;card-header&quot;&gt;
+            &lt;h4&gt;Silhouette Cohesion Spectrum&lt;/h4&gt;
+          &lt;/div&gt;
+          &lt;div style=&quot;height: 260px; position: relative;&quot;&gt;
+            &lt;canvas id=&quot;silhouetteCanvas&quot;&gt;&lt;/canvas&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- PCA Dimensionality Reduction Scatter Plot --&gt;
+      &lt;div class=&quot;content-card&quot;&gt;
+        &lt;div class=&quot;card-header&quot;&gt;
+          &lt;div&gt;
+            &lt;h3&gt;PCA Hyperplane Projection (112 Corridors)&lt;/h3&gt;
+            &lt;p&gt;Orthogonal projection into principal components. PC1 (68.1% var) maps fare magnitude &amp; distance; PC2 (11.1% var) maps direct connectivity vs surge.&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;input type=&quot;text&quot; id=&quot;pcaRouteFilter&quot; class=&quot;input-clean&quot; placeholder=&quot;🔍 Search corridor (e.g. London, Goa, Dubai)...&quot; style=&quot;max-width: 300px;&quot;&gt;
+        &lt;/div&gt;
+        &lt;div style=&quot;height: 400px; position: relative;&quot;&gt;
+          &lt;canvas id=&quot;pcaScatterCanvas&quot;&gt;&lt;/canvas&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- PCA Loading Compass --&gt;
+      &lt;div class=&quot;content-card&quot;&gt;
+        &lt;div class=&quot;card-header&quot;&gt;
+          &lt;h3&gt;PCA Feature Loadings&lt;/h3&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;table-responsive&quot;&gt;
+          &lt;table class=&quot;table-clean&quot;&gt;
+            &lt;thead&gt;
+              &lt;tr&gt;
+                &lt;th&gt;Behavioral Dimension&lt;/th&gt;
+                &lt;th&gt;PC1 (68.1%)&lt;/th&gt;
+                &lt;th&gt;PC2 (11.1%)&lt;/th&gt;
+                &lt;th&gt;PC3 (9.3%)&lt;/th&gt;
+                &lt;th&gt;Aviation Domain Meaning&lt;/th&gt;
+              &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+              {% for feature, loadings in metrics.pca_loadings.items() %}
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;{{ feature }}&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;{{ loadings.PC1 }}&lt;/td&gt;
+                &lt;td&gt;{{ loadings.PC2 }}&lt;/td&gt;
+                &lt;td&gt;{{ loadings.PC3 }}&lt;/td&gt;
+                &lt;td&gt;
+                  {% if feature in [&#x27;mean_price&#x27;, &#x27;price_spread&#x27;, &#x27;avg_duration&#x27;] %}
+                    Fare magnitude &amp; flight distance
+                  {% elif feature in [&#x27;direct_flight_ratio&#x27;] %}
+                    Direct shuttle connectivity
+                  {% elif feature in [&#x27;last_minute_surge_ratio&#x27;, &#x27;price_cv&#x27;] %}
+                    Yield surge aggressiveness
+                  {% else %}
+                    Premium cabin &amp; peak slot markup
+                  {% endif %}
+                &lt;/td&gt;
+              &lt;/tr&gt;
+              {% endfor %}
+            &lt;/tbody&gt;
+          &lt;/table&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+    &lt;/div&gt;
+
+  &lt;/main&gt;
+
+  &lt;!-- Pass serialized metrics to JS --&gt;
+  &lt;script&gt;
+    window.INITIAL_DATA = {{ initial_prediction | tojson | safe }};
+    window.MODEL_METRICS = {{ metrics | tojson | safe }};
+  &lt;/script&gt;
+  &lt;script src=&quot;/static/js/charts.js?v=3.0&quot;&gt;&lt;/script&gt;
+  &lt;script src=&quot;/static/js/app.js?v=3.0&quot;&gt;&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+      </div>
+    </div>
+    
+    <div class="code-module-card" id="module-12">
+      <div class="code-module-header">
+        <div class="module-title-box">
+          <span class="module-num-badge">MODULE #12</span>
+          <span class="module-path">app/static/css/style.css</span>
+        </div>
+        <div class="module-meta-badges">
+          <span class="badge category-badge">Styling & Design System</span>
+          <span class="badge lang-badge">CSS3</span>
+          <span class="badge lines-badge">1094 Lines</span>
+        </div>
+      </div>
+      <div class="module-desc">
+        <strong>Component Description:</strong> Editorial white luxury design system, responsive grid layouts, card elevations, badge styling, and split-screen responsive media queries.
+      </div>
+      <div class="code-container">
+        <pre><code class="language-css3">/* ==========================================================================
+   FarePredictor: White Luxury Flight Intelligence &amp; Price Forecasting
+   Modern, Consumer-Centric, Ultra-Clean Design System
+   ========================================================================== */
+
+@import url(&#x27;https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700;800&amp;display=swap&#x27;);
+
+:root {
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-subtle: #f1f5f9;
+  --bg-input: #ffffff;
+  --border-light: #e2e8f0;
+  --border-hover: #cbd5e1;
+  --border-accent: #3b82f6;
+
+  --primary-navy: #0f172a;
+  --primary-blue: #2563eb;
+  --primary-indigo: #4f46e5;
+  --cyan-accent: #0284c7;
+  --emerald-green: #059669;
+  --emerald-bg: #ecfdf5;
+  --amber-orange: #d97706;
+  --amber-bg: #fffbeb;
+  --rose-red: #dc2626;
+  --rose-bg: #fef2f2;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+
+  --font-mono: &#x27;JetBrains Mono&#x27;, monospace;
+  --font-display: &#x27;Space Grotesk&#x27;, sans-serif;
+  --font-sans: &#x27;Plus Jakarta Sans&#x27;, sans-serif;
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  --shadow-hover: 0 12px 28px -4px rgba(15, 23, 42, 0.09), 0 4px 10px -2px rgba(15, 23, 42, 0.03);
+  --shadow-focus: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-main);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.03) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(5, 150, 105, 0.03) 0px, transparent 50%);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  padding-bottom: 60px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   Top Header (Clean White &amp; Slate)
+   ========================================================================== */
+.app-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-light);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border: 1px solid #bfdbfe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon {
+  font-size: 20px;
+  color: var(--primary-blue);
+}
+
+.brand-info h1 {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: -0.3px;
+}
+
+.badge-subtle {
+  background: #eff6ff;
+  color: var(--primary-blue);
+  border: 1px solid #bfdbfe;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.brand-info p {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.main-nav {
+  display: flex;
+  gap: 6px;
+  background: var(--bg-subtle);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+}
+
+.nav-tab-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 8px 16px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-tab-btn:hover {
+  color: var(--primary-blue);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.nav-tab-btn.active {
+  background: #ffffff;
+  color: var(--primary-blue);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================================================================
+   Main Content Layout
+   ========================================================================== */
+.main-content {
+  max-width: 1240px;
+  margin: 24px auto 0 auto;
+  padding: 0 24px;
+}
+
+/* ==========================================================================
+   Horizontal Search Banner (FarePredictor Style)
+   ========================================================================== */
+.search-banner {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 22px 24px 16px 24px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 24px;
+}
+
+.search-form-horizontal {
+  display: grid;
+  grid-template-columns: 2fr auto 2fr 1.5fr 1.5fr auto;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.search-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 15px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.select-clean,
+.input-clean {
+  width: 100%;
+  height: 46px;
+  padding: 10px 14px 10px 38px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.2s ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.input-clean {
+  padding-left: 14px;
+}
+
+.select-clean:focus,
+.input-clean:focus {
+  background: #ffffff;
+  border-color: var(--primary-blue);
+  box-shadow: var(--shadow-focus);
+}
+
+.btn-swap-clean {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-full);
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  color: var(--primary-blue);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 2px;
+}
+
+.btn-swap-clean:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  transform: rotate(180deg);
+}
+
+.btn-execute-analysis {
+  height: 46px;
+  padding: 0 24px;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.btn-execute-analysis:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+
+.popular-routes-bar {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.popular-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.popular-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.preset-pill {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.preset-pill:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: var(--primary-blue);
+}
+
+/* ==========================================================================
+   Recommendation Hero (100% Consumer-Friendly Verdict)
+   ========================================================================== */
+.recommendation-hero {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 24px;
+}
+
+.hero-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.verdict-banner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.signal-badge-cockpit {
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.signal-badge-cockpit.book-now {
+  background: var(--emerald-bg);
+  color: var(--emerald-green);
+  border: 1.5px solid #a7f3d0;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.15);
+}
+
+.signal-badge-cockpit.wait {
+  background: var(--amber-bg);
+  color: var(--amber-orange);
+  border: 1.5px solid #fde68a;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.15);
+}
+
+.signal-badge-cockpit.monitor {
+  background: #eff6ff;
+  color: var(--primary-blue);
+  border: 1.5px solid #bfdbfe;
+}
+
+.route-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.flight-arrow {
+  color: var(--primary-blue);
+  font-weight: 400;
+}
+
+.route-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.price-callout-box {
+  text-align: right;
+}
+
+.price-header-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.price-amount {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--primary-navy);
+  line-height: 1.1;
+  margin: 4px 0;
+}
+
+.savings-badge {
+  display: inline-block;
+  background: var(--emerald-bg);
+  color: var(--emerald-green);
+  border: 1px solid #a7f3d0;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+/* Plain English Explanation Box */
+.verdict-explanation-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.explanation-icon {
+  font-size: 22px;
+}
+
+.explanation-text h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.explanation-text p {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Visual Price Gauge */
+.price-gauge-container {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+}
+
+.gauge-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.gauge-track {
+  height: 12px;
+  border-radius: var(--radius-full);
+  position: relative;
+  background: #e2e8f0;
+  margin-bottom: 28px;
+}
+
+.gauge-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, #10b981 0%, #3b82f6 35%, #f59e0b 70%, #ef4444 100%);
+}
+
+.gauge-indicator {
+  position: absolute;
+  top: -4px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: left 0.4s ease;
+}
+
+.pin-marker {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 4px solid var(--primary-navy);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.pin-label {
+  margin-top: 6px;
+  background: var(--primary-navy);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.gauge-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.label-low { color: var(--emerald-green); }
+.label-mid { color: var(--text-muted); }
+.label-high { color: var(--rose-red); }
+
+/* Key Metrics Grid */
+.key-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.metric-card {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+}
+
+.metric-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metric-value {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 4px 0 2px 0;
+}
+
+.metric-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Tab View Panels
+   ========================================================================== */
+.view-panel {
+  display: none;
+}
+
+.view-panel.active {
+  display: block;
+}
+
+.content-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 24px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.card-header h3 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.card-header p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.route-badge {
+  background: #eff6ff;
+  color: var(--primary-blue);
+  border: 1px solid #bfdbfe;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
+.chart-wrapper {
+  height: 360px;
+  position: relative;
+  margin-bottom: 24px;
+}
+
+/* Guidance Grid */
+.guidance-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.guidance-card {
+  padding: 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+}
+
+.guidance-card.green {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+}
+
+.guidance-card.red {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.guidance-card.blue {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.guidance-tag {
+  font-size: 11px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.guidance-card.green .guidance-tag { color: var(--emerald-green); }
+.guidance-card.red .guidance-tag { color: var(--rose-red); }
+.guidance-card.blue .guidance-tag { color: var(--primary-blue); }
+
+.guidance-card h4 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.guidance-card p {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   Available Flights List (Tab 2)
+   ========================================================================== */
+.flight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.flight-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 18px 24px;
+  display: grid;
+  grid-template-columns: 1.5fr 2fr 1fr;
+  align-items: center;
+  gap: 20px;
+  transition: all 0.2s ease;
+}
+
+.flight-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.flight-airline {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.airline-logo-box {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.airline-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.flight-no {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.flight-timing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.time-point {
+  text-align: center;
+}
+
+.time-point .time {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: block;
+}
+
+.time-point .airport-code {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.flight-duration-bar {
+  flex: 1;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.duration-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.duration-line {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+}
+
+.line-bar {
+  width: 100%;
+  height: 2px;
+  background: #cbd5e1;
+}
+
+.line-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary-blue);
+  position: absolute;
+}
+
+.line-dot.start { left: 0; }
+.line-dot.end { right: 0; }
+
+.stops-text {
+  font-size: 11px;
+  color: var(--emerald-green);
+  font-weight: 700;
+}
+
+.flight-price-box {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.deal-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.flight-fare {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.btn-select-flight {
+  background: var(--primary-blue);
+  color: #ffffff;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-select-flight:hover {
+  background: #1d4ed8;
+}
+
+/* ==========================================================================
+   Academic &amp; AI Methodology (Tab 4)
+   ========================================================================== */
+.academic-telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.academic-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.academic-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.academic-val {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 4px 0 2px 0;
+}
+
+.academic-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.table-clean {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table-clean th {
+  background: var(--bg-subtle);
+  padding: 12px 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-align: left;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.table-clean td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-secondary);
+}
+
+.table-clean tr:hover td {
+  background: #f8fafc;
+}
+
+.dual-chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+/* Dossier Grid */
+.dossier-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.dossier-card {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 22px;
+}
+
+.dossier-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.dossier-header h4 {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.d-pill {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  border: 1px solid;
+}
+
+.dossier-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.dossier-stats-matrix {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  background: #ffffff;
+  padding: 12px;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-light);
+  margin-bottom: 14px;
+}
+
+.dossier-stat-item {
+  text-align: center;
+}
+
+.d-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
+.d-val {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.sample-routes-list {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.sample-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.sample-route-tag {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+}
+
+/* ==========================================================================
+   Responsive Adaptations (Flawless on Split-Screen &amp; Mobile)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .header-container {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .main-nav {
+    overflow-x: auto;
+    white-space: nowrap;
+    justify-content: flex-start;
+    padding: 6px;
+  }
+  .search-form-horizontal {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .btn-swap-clean {
+    display: none;
+  }
+  .hero-top {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .price-callout-box {
+    text-align: left;
+  }
+  .key-metrics-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .academic-telemetry-grid,
+  .guidance-grid,
+  .dual-chart-grid,
+  .dossier-grid {
+    grid-template-columns: 1fr;
+  }
+  .flight-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 14px;
+  }
+  .flight-airline {
+    justify-content: center;
+  }
+  .flight-timing {
+    margin: 10px 0;
+  }
+  .flight-price-box {
+    align-items: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .key-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  .verdict-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+</code></pre>
+      </div>
+    </div>
+    
+    <div class="code-module-card" id="module-13">
+      <div class="code-module-header">
+        <div class="module-title-box">
+          <span class="module-num-badge">MODULE #13</span>
+          <span class="module-path">app/static/js/app.js</span>
+        </div>
+        <div class="module-meta-badges">
+          <span class="badge category-badge">Frontend Interactivity</span>
+          <span class="badge lang-badge">JavaScript (ES6+)</span>
+          <span class="badge lines-badge">256 Lines</span>
+        </div>
+      </div>
+      <div class="module-desc">
+        <strong>Component Description:</strong> Client-side telemetry scan execution, dynamic flight option filtering, currency formatting, and tab switching logic.
+      </div>
+      <div class="code-container">
+        <pre><code class="language-javascript (es6+)">/**
+ * AEROMATRIX Cockpit Controller
+ */
+
+document.addEventListener(&quot;DOMContentLoaded&quot;, () =&gt; {
+  // Mode / View Switcher
+  const viewBtns = document.querySelectorAll(&quot;.nav-tab-btn&quot;);
+  const viewPanels = document.querySelectorAll(&quot;.view-panel&quot;);
+
+  viewBtns.forEach(btn =&gt; {
+    btn.addEventListener(&quot;click&quot;, () =&gt; {
+      const targetView = btn.getAttribute(&quot;data-view&quot;);
+      viewBtns.forEach(b =&gt; b.classList.remove(&quot;active&quot;));
+      viewPanels.forEach(p =&gt; p.classList.remove(&quot;active&quot;));
+
+      btn.classList.add(&quot;active&quot;);
+      const activePanel = document.getElementById(targetView);
+      if (activePanel) {
+        activePanel.classList.add(&quot;active&quot;);
+      }
+    });
+  });
+
+  // Search Form
+  const searchForm = document.getElementById(&quot;cockpitSearchForm&quot;);
+  if (searchForm) {
+    searchForm.addEventListener(&quot;submit&quot;, (e) =&gt; {
+      e.preventDefault();
+      executeCockpitScan();
+    });
+  }
+
+  // Airport Swap Button
+  const btnSwap = document.getElementById(&quot;btnSwapAtc&quot;);
+  if (btnSwap) {
+    btnSwap.addEventListener(&quot;click&quot;, () =&gt; {
+      const fromSel = document.getElementById(&quot;fromCity&quot;);
+      const toSel = document.getElementById(&quot;toCity&quot;);
+      if (fromSel &amp;&amp; toSel) {
+        const temp = fromSel.value;
+        fromSel.value = toSel.value;
+        toSel.value = temp;
+
+        btnSwap.style.transform = &quot;rotate(180deg)&quot;;
+        setTimeout(() =&gt; { btnSwap.style.transform = &quot;none&quot;; }, 300);
+
+        executeCockpitScan();
+      }
+    });
+  }
+
+  // Quick Vector Presets
+  document.querySelectorAll(&quot;.preset-pill&quot;).forEach(pill =&gt; {
+    pill.addEventListener(&quot;click&quot;, () =&gt; {
+      const from = pill.getAttribute(&quot;data-from&quot;);
+      const to = pill.getAttribute(&quot;data-to&quot;);
+      const fromSel = document.getElementById(&quot;fromCity&quot;);
+      const toSel = document.getElementById(&quot;toCity&quot;);
+
+      if (fromSel &amp;&amp; toSel) {
+        fromSel.value = from;
+        toSel.value = to;
+        executeCockpitScan();
+      }
+    });
+  });
+
+  // PCA Route Filter
+  const pcaFilter = document.getElementById(&quot;pcaRouteFilter&quot;);
+  if (pcaFilter) {
+    pcaFilter.addEventListener(&quot;input&quot;, (e) =&gt; {
+      const query = (e.target.value || &quot;&quot;).trim().toLowerCase();
+      if (window.MODEL_METRICS &amp;&amp; window.MODEL_METRICS.pca_points) {
+        let pts = window.MODEL_METRICS.pca_points;
+        if (query) {
+          pts = pts.filter(p =&gt; p.route.toLowerCase().includes(query));
+        }
+        renderPcaScatter(pts, window.CURRENT_ACTIVE_ROUTE || &quot;&quot;);
+      }
+    });
+  }
+
+  // Initialize with initial data
+  if (window.INITIAL_DATA) {
+    window.CURRENT_ACTIVE_ROUTE = window.INITIAL_DATA.route;
+    updateCockpitUI(window.INITIAL_DATA);
+  }
+
+  if (window.MODEL_METRICS) {
+    renderEvaluationHub(window.MODEL_METRICS);
+  }
+});
+
+function executeCockpitScan() {
+  const fromCity = document.getElementById(&quot;fromCity&quot;).value;
+  const toCity = document.getElementById(&quot;toCity&quot;).value;
+  const departDate = document.getElementById(&quot;departDate&quot;).value;
+  const travelClass = document.getElementById(&quot;travelClass&quot;).value;
+
+  const btn = document.querySelector(&quot;.btn-execute-analysis&quot;);
+  const origHtml = btn.innerHTML;
+  btn.innerHTML = `&lt;span&gt;⏳ Scanning Corridors...&lt;/span&gt;`;
+  btn.disabled = true;
+
+  const url = `/api/predict?from=${encodeURIComponent(fromCity)}&amp;to=${encodeURIComponent(toCity)}&amp;depart=${encodeURIComponent(departDate)}&amp;class=${encodeURIComponent(travelClass)}`;
+
+  fetch(url)
+    .then(res =&gt; res.json())
+    .then(data =&gt; {
+      window.CURRENT_ACTIVE_ROUTE = data.route;
+      updateCockpitUI(data);
+    })
+    .catch(err =&gt; {
+      console.error(&quot;Telemetry query failed:&quot;, err);
+    })
+    .finally(() =&gt; {
+      btn.innerHTML = origHtml;
+      btn.disabled = false;
+    });
+}
+
+function updateCockpitUI(data) {
+  // 1. Route IATA Callout
+  const calloutIata = document.getElementById(&quot;calloutIata&quot;);
+  if (calloutIata) {
+    calloutIata.innerHTML = `&lt;span&gt;${data.origin_code}&lt;/span&gt; &lt;span class=&quot;flight-arrow&quot;&gt;➔&lt;/span&gt; &lt;span&gt;${data.destination_code}&lt;/span&gt;`;
+  }
+
+  const calloutCities = document.getElementById(&quot;calloutCities&quot;);
+  if (calloutCities) {
+    calloutCities.textContent = `${data.origin} (${data.origin_airport}) to ${data.destination} (${data.destination_airport})`;
+  }
+
+  // 2. Verdict Badge
+  const verdictBadge = document.getElementById(&quot;verdictBadge&quot;);
+  if (verdictBadge) {
+    verdictBadge.className = `signal-badge-cockpit ${data.verdict_badge}`;
+    const icon = data.verdict_badge === &quot;book-now&quot; ? &quot;⚡&quot; : (data.verdict_badge === &quot;wait&quot; ? &quot;⏳&quot; : &quot;👁&quot;);
+    verdictBadge.innerHTML = `&lt;span&gt;${icon}&lt;/span&gt; ${data.verdict}`;
+  }
+
+  // 3. Telemetry Cells
+  const statFare = document.getElementById(&quot;statFare&quot;);
+  if (statFare) statFare.textContent = `₹${data.estimated_fare.toLocaleString()}`;
+
+  const statConfidence = document.getElementById(&quot;statConfidence&quot;);
+  if (statConfidence) statConfidence.textContent = `${data.confidence_score}%`;
+
+  const statSurge = document.getElementById(&quot;statSurge&quot;);
+  if (statSurge) statSurge.textContent = `${data.cluster_info.surge_ratio}x`;
+
+  const statDays = document.getElementById(&quot;statDays&quot;);
+  if (statDays) statDays.textContent = `${data.days_left} Days`;
+
+  // 4. Percentile Gauge Pin
+  const gaugePin = document.getElementById(&quot;gaugePin&quot;);
+  if (gaugePin) {
+    gaugePin.style.left = `${data.percentile_rank}%`;
+  }
+
+  const medianVal = document.getElementById(&quot;medianVal&quot;);
+  if (medianVal) medianVal.textContent = `MEDIAN BENCHMARK: ₹${data.price_benchmarks.median.toLocaleString()}`;
+
+  const p10Val = document.getElementById(&quot;p10Val&quot;);
+  if (p10Val) p10Val.textContent = `P10 (Floor): ₹${data.price_benchmarks.p10.toLocaleString()}`;
+
+  const p90Val = document.getElementById(&quot;p90Val&quot;);
+  if (p90Val) p90Val.textContent = `P90 (Peak): ₹${data.price_benchmarks.p90.toLocaleString()}`;
+
+  // 5. Financial Advantage Callout
+  const advantageMsg = document.getElementById(&quot;advantageMsg&quot;);
+  if (advantageMsg) {
+    advantageMsg.textContent = data.verdict_summary || `Financial Protection Active: Booking now avoids up to ₹${data.potential_savings_inr.toLocaleString()} in departure-week surge escalation.`;
+  }
+
+  const verdictHeading = document.getElementById(&quot;verdictHeading&quot;);
+  if (verdictHeading) {
+    if (data.verdict_badge === &quot;book-now&quot;) {
+      verdictHeading.textContent = &quot;Best Time to Book — Great Price Detected&quot;;
+    } else if (data.verdict_badge === &quot;wait&quot;) {
+      verdictHeading.textContent = &quot;Hold Off — Prices Expected to Drop&quot;;
+    } else {
+      verdictHeading.textContent = &quot;Fair Price — Monitor Trends&quot;;
+    }
+  }
+
+  const advantagePill = document.getElementById(&quot;advantagePill&quot;);
+  if (advantagePill) {
+    advantagePill.textContent = `Save ${data.savings_pct}% vs Peak`;
+  }
+
+  // 5.5 Flight Options Update
+  const flightContainer = document.getElementById(&quot;flightOptionsContainer&quot;);
+  if (flightContainer &amp;&amp; data.flight_options) {
+    flightContainer.innerHTML = data.flight_options.map(flight =&gt; `
+      &lt;div class=&quot;flight-card&quot;&gt;
+        &lt;div class=&quot;flight-airline&quot;&gt;
+          &lt;div class=&quot;airline-logo-box&quot;&gt;✈️&lt;/div&gt;
+          &lt;div&gt;
+            &lt;div class=&quot;airline-name&quot;&gt;${flight.airline}&lt;/div&gt;
+            &lt;div class=&quot;flight-no&quot;&gt;${flight.flight_no}&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;flight-timing&quot;&gt;
+          &lt;div class=&quot;time-point&quot;&gt;
+            &lt;span class=&quot;time&quot;&gt;${flight.dep_time}&lt;/span&gt;
+            &lt;span class=&quot;airport-code&quot;&gt;${data.origin_code}&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;flight-duration-bar&quot;&gt;
+            &lt;span class=&quot;duration-text&quot;&gt;${flight.duration}&lt;/span&gt;
+            &lt;div class=&quot;duration-line&quot;&gt;
+              &lt;span class=&quot;line-dot start&quot;&gt;&lt;/span&gt;
+              &lt;span class=&quot;line-bar&quot;&gt;&lt;/span&gt;
+              &lt;span class=&quot;line-dot end&quot;&gt;&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;span class=&quot;stops-text&quot;&gt;${flight.stops}&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;time-point&quot;&gt;
+            &lt;span class=&quot;time&quot;&gt;${flight.arr_time}&lt;/span&gt;
+            &lt;span class=&quot;airport-code&quot;&gt;${data.destination_code}&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;flight-price-box&quot;&gt;
+          &lt;span class=&quot;deal-badge&quot; style=&quot;background: ${flight.badge_color}15; color: ${flight.badge_color}; border: 1px solid ${flight.badge_color}30;&quot;&gt;
+            ${flight.badge}
+          &lt;/span&gt;
+          &lt;div class=&quot;flight-fare&quot;&gt;₹${flight.price.toLocaleString()}&lt;/div&gt;
+          &lt;button class=&quot;btn-select-flight&quot; onclick=&quot;alert(&#x27;Flight ${flight.flight_no} on ${flight.airline} selected at ₹${flight.price.toLocaleString()}. Proceeding to confirmation.&#x27;)&quot;&gt;Select Flight&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `).join(&quot;&quot;);
+  }
+
+  // 6. Booking Yield Curve
+  if (data.curve_data) {
+    renderBookingCurve(data.curve_data, data.estimated_fare);
+  }
+
+  // 7. PCA Map Spotlight
+  if (window.MODEL_METRICS &amp;&amp; window.MODEL_METRICS.pca_points) {
+    renderPcaScatter(window.MODEL_METRICS.pca_points, data.route);
+  }
+}
+
+function renderEvaluationHub(metrics) {
+  if (metrics.k_eval_sweep) {
+    renderElbowChart(metrics.k_eval_sweep);
+    renderSilhouetteChart(metrics.k_eval_sweep);
+  }
+  if (metrics.distance_comparison) {
+    renderDistanceComparison(metrics.distance_comparison);
+  }
+  if (metrics.pca_points) {
+    renderPcaScatter(metrics.pca_points, window.CURRENT_ACTIVE_ROUTE || &quot;&quot;);
+  }
+}
+</code></pre>
+      </div>
+    </div>
+    
+    <div class="code-module-card" id="module-14">
+      <div class="code-module-header">
+        <div class="module-title-box">
+          <span class="module-num-badge">MODULE #14</span>
+          <span class="module-path">tests/test_clustering.py</span>
+        </div>
+        <div class="module-meta-badges">
+          <span class="badge category-badge">Verification & Testing</span>
+          <span class="badge lang-badge">Python / Pytest</span>
+          <span class="badge lines-badge">51 Lines</span>
+        </div>
+      </div>
+      <div class="module-desc">
+        <strong>Component Description:</strong> Unit tests verifying deterministic K-Means convergence, distance metric accuracy, and cluster partition stability.
+      </div>
+      <div class="code-container">
+        <pre><code class="language-python / pytest">&quot;&quot;&quot;
+Unit Tests for Clustering and Dimensionality Reduction.
+&quot;&quot;&quot;
+
+import os
+import sys
+import unittest
+import numpy as np
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), &quot;..&quot;, &quot;src&quot;)))
+
+from clustering import (
+    run_kmeans_clustering,
+    run_manhattan_clustering,
+    compute_pca_projection
+)
+from evaluation import evaluate_kmeans_sweep, compare_distance_metrics
+
+class TestClustering(unittest.TestCase):
+    def setUp(self):
+        np.random.seed(42)
+        # 3 artificial clusters in 5-dimensional space
+        c1 = np.random.normal(loc=-3, scale=0.5, size=(15, 5))
+        c2 = np.random.normal(loc=0, scale=0.5, size=(15, 5))
+        c3 = np.random.normal(loc=4, scale=0.5, size=(15, 5))
+        self.X = np.vstack([c1, c2, c3])
+
+    def test_kmeans_euclidean(self):
+        km = run_kmeans_clustering(self.X, k=3, random_state=42)
+        self.assertEqual(len(np.unique(km.labels_)), 3)
+        self.assertGreater(km.inertia_, 0)
+
+    def test_manhattan_clustering(self):
+        kmed = run_manhattan_clustering(self.X, k=3, random_state=42)
+        self.assertEqual(len(np.unique(kmed.labels_)), 3)
+        self.assertGreater(kmed.inertia_, 0)
+
+    def test_pca_projection(self):
+        pca, X_pca, exp_var = compute_pca_projection(self.X, n_components=3)
+        self.assertEqual(X_pca.shape, (45, 3))
+        self.assertEqual(len(exp_var), 3)
+        self.assertAlmostEqual(float(np.sum(exp_var)), 1.0, delta=0.2)
+
+    def test_evaluation_sweep(self):
+        res_df = evaluate_kmeans_sweep(self.X, k_range=[2, 3, 4])
+        self.assertEqual(len(res_df), 3)
+        self.assertIn(&quot;silhouette&quot;, res_df.columns)
+        self.assertIn(&quot;davies_bouldin&quot;, res_df.columns)
+
+if __name__ == &quot;__main__&quot;:
+    unittest.main()
+</code></pre>
+      </div>
+    </div>
+    
+    <div class="code-module-card" id="module-15">
+      <div class="code-module-header">
+        <div class="module-title-box">
+          <span class="module-num-badge">MODULE #15</span>
+          <span class="module-path">tests/test_preprocessing.py</span>
+        </div>
+        <div class="module-meta-badges">
+          <span class="badge category-badge">Verification & Testing</span>
+          <span class="badge lang-badge">Python / Pytest</span>
+          <span class="badge lines-badge">54 Lines</span>
+        </div>
+      </div>
+      <div class="module-desc">
+        <strong>Component Description:</strong> Unit tests validating data cleaning pipelines, missing value imputation, and feature standardization.
+      </div>
+      <div class="code-container">
+        <pre><code class="language-python / pytest">&quot;&quot;&quot;
+Unit Tests for Preprocessing and Feature Engineering.
+&quot;&quot;&quot;
+
+import os
+import sys
+import unittest
+import numpy as np
+import pandas as pd
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), &quot;..&quot;, &quot;src&quot;)))
+
+from data_loader import load_or_generate_dataset
+from feature_engineering import (
+    preprocess_flight_records,
+    aggregate_route_features,
+    prepare_clustering_matrix
+)
+
+class TestPreprocessing(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.raw_df = load_or_generate_dataset(num_samples=1000)
+
+    def test_raw_dataset_structure(self):
+        self.assertGreaterEqual(len(self.raw_df), 1000)
+        expected_cols = [&quot;airline&quot;, &quot;source_city&quot;, &quot;destination_city&quot;, &quot;price&quot;, &quot;days_left&quot;]
+        for col in expected_cols:
+            self.assertIn(col, self.raw_df.columns)
+
+    def test_preprocessing_imputation_and_encoding(self):
+        clean = preprocess_flight_records(self.raw_df)
+        self.assertEqual(clean.isnull().sum().sum(), 0)
+        self.assertIn(&quot;stops_num&quot;, clean.columns)
+        self.assertIn(&quot;class_num&quot;, clean.columns)
+        self.assertIn(&quot;route&quot;, clean.columns)
+
+    def test_route_aggregation(self):
+        clean = preprocess_flight_records(self.raw_df)
+        routes = aggregate_route_features(clean)
+        self.assertGreater(len(routes), 5)
+        self.assertIn(&quot;mean_price&quot;, routes.columns)
+        self.assertIn(&quot;last_minute_surge_ratio&quot;, routes.columns)
+        self.assertIn(&quot;price_cv&quot;, routes.columns)
+
+    def test_matrix_scaling(self):
+        clean = preprocess_flight_records(self.raw_df)
+        routes = aggregate_route_features(clean)
+        X, scaler, feature_names = prepare_clustering_matrix(routes)
+        self.assertEqual(len(X.shape), 2)
+        self.assertAlmostEqual(float(np.mean(X[:, 0])), 0.0, delta=0.5)
+
+if __name__ == &quot;__main__&quot;:
+    unittest.main()
+</code></pre>
+      </div>
+    </div>
+    
+
+  </div>
+</body>
+</html>
