@@ -1,9 +1,11 @@
 # Airfare Route Segmentation by Historical Pricing Behaviour Using Unsupervised Machine Learning
 
-**Krishna Kumar singh**  
-*Department of Computer Science & Engineering*  
-*Specialization in Unsupervised Machine Learning & Data Analytics*  
-*babukrishnasingh575@gmail.com*  
+| **Krishna Kumar singh** | **[Second Author Name]** | **[Third Author Name]** |
+| :---: | :---: | :---: |
+| *Dept. of Computer Science & Engineering* | *Dept. of Computer Science & Engineering* | *Dept. of Computer Science & Engineering* |
+| *University of Engineering & Technology* | *University of Engineering & Technology* | *University of Engineering & Technology* |
+| *New Delhi, India* | *New Delhi, India* | *New Delhi, India* |
+| babukrishnasingh575@gmail.com | [second.author@university.edu] | [third.author@university.edu] |  
 
 ---
 
